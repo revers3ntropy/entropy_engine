@@ -5,4 +5,4 @@ System requirements:
   python
   pygame (pip installable)
 
-please go to www.revers3ntropy.com/entropy-engine.html for more information.
+Please look at the wiki on github.com for more information
