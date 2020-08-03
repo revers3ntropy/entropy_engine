@@ -1,6 +1,7 @@
 import button
 import renderer
 import typing
+import hit_box
 
 
 class SwitchButton(button.Buttons):  # not used in this project, but I might as well include it
@@ -25,9 +26,8 @@ class SwitchButton(button.Buttons):  # not used in this project, but I might as 
 
         self.number_of_states = len(self.states)
         self.size_x = (typing.fonts[font][typing.size_x] + 5) * len(self.states[self.current_state])
-        self.hit_box = (
-            pos[0] - self.size_x / 2, pos[1] - typing.fonts[font][typing.size_y] / 2, self.size_x,
-            typing.fonts[font][typing.size_y])
+        self.hit_box = hit_box.HitBox(pos[0] - self.size_x / 2, pos[1] - typing.fonts[font][typing.size_y] / 2,
+                                      self.size_x, typing.fonts[font][typing.size_y])
 
     # ================================================================================================
     #  update_states -- pushed the state forward one

@@ -9,6 +9,8 @@ import sprite
 import ui
 import fail_system
 import unit_tests
+import time
+import time_controller
 
 
 def write(font, message, pos):  # just so that you only have to import one file
@@ -57,6 +59,7 @@ def set_window_size(size_x, size_y):
 
 
 def tick():
+    start_time = time.time()
     py.display.set_caption(str(global_data.window_title))
     py.display.flip()
     renderer.clock.tick(renderer.run_FPS)
@@ -77,6 +80,9 @@ def tick():
         if event.type == py.QUIT:
             py.quit()
             return False
+
+    time_controller.update_fps(start_time)
+
     return True
 
 
@@ -145,3 +151,22 @@ def find_sprite(name):
     for i in sprite_controller.list_of_sprites:
         if i.get_name() == name:
             return i
+
+
+def get_current_fps():
+    return time_controller.current_fps
+
+
+def get_target_fps():
+    return renderer.run_FPS
+
+
+def set_target_fps(fps):
+    try:
+        fps = int(fps)
+        if 0 < fps < 10000:
+            renderer.run_FPS = fps
+        else:
+            fail_system.error('FPS cannot be set to ' + str(fps))
+    except:
+        fail_system.error('FPS cannot be set to ' + str(fps))
