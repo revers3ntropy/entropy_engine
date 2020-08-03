@@ -2,6 +2,7 @@ import body
 import image
 import script
 import fail_system
+import collider
 
 
 class Sprite:
