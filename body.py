@@ -1,29 +1,31 @@
 import sprite_controller
 import math
 import renderer
+import fail_system
+import utilities
 
 
 class Body(sprite_controller.SpriteComponent):
     def __init__(self):
         super().__init__('body')
         self.position = (renderer.mid_x, renderer.mid_y)
-        self.velocity = (0, 0)
+        self.velocity = [0, 0]
         self.components = []
         self.mass = 1
-        self.gravity = 1
+        self.gravity = 0
         self.friction = 1
 
-    def change_velocity(self, speed_change, direction_change):
-        self.velocity = (self.velocity[0] + speed_change, self.velocity[1] + direction_change)
+    def change_velocity(self, x_component, y_component):
+        self.velocity = utilities.add_vectors([x_component, y_component], self.velocity)
 
-    def set_velocity(self, new_speed, new_direction):
-        self.velocity = (new_speed, new_direction)
+    def set_velocity(self, x_component, y_component):
+        self.velocity = [x_component, y_component]
 
     def get_velocity(self):
         return self.velocity
 
     def move(self, position_change):
-        self.position = (self.position[0] + position_change[0], self.position[1] + position_change[1])
+        self.position = utilities.add_vectors(position_change, self.position)
 
     def go_to(self, new_coords):
         self.position = new_coords
@@ -31,26 +33,33 @@ class Body(sprite_controller.SpriteComponent):
     def get_position(self):
         return self.position
 
-    def apply_force(self, magnitude, angle):
-        acceleration = magnitude / self.mass
+    def apply_force(self, x_component, y_component):
+        if x_component != 0 or y_component != 0:
 
-        x_component = acceleration * math.sin(angle)  # trig to get the components of the vector
-        y_component = acceleration * math.cos(angle)
-        v2 = (x_component, y_component)
-        x_component = self.velocity[0] * math.sin(self.velocity[1])  # trig to get the components of the vector
-        y_component = self.velocity[0] * math.cos(self.velocity[1])
-        v1 = (x_component, y_component)
+            x_component = x_component / self.mass
+            y_component = y_component / self.mass
 
-        new_v = (v1[0] + v2[0], v1[1] + v2[1])
-
-        new_magnitude = math.sqrt(new_v[0] ** 2 + new_v[1] ** 2)
-        new_angle = math.acos(new_v[1] / new_magnitude)
-
-        self.velocity = (new_magnitude, new_angle)
+            self.velocity = utilities.add_vectors(self.velocity, (x_component, y_component))
 
     def physics_tick(self):
-        x_component = self.velocity[0] * math.sin(self.velocity[1])  # trig to get the components of the vector
-        y_component = self.velocity[0] * math.cos(self.velocity[1])
-        self.position = (self.position[0] + x_component, self.position[1] + y_component)
+        self.apply_gravity()
 
-        self.velocity = (self.velocity[0] * (1 / self.friction), self.velocity[1])
+        self.position = utilities.add_vectors(self.position, self.velocity)
+
+        self.velocity = (self.velocity[0] * (1 / self.friction), self.velocity[1] * (1 / self.friction))
+
+    def apply_gravity(self):
+        self.apply_force(0, self.gravity)
+
+    def set_gravity(self, strength):
+        try:
+            strength = float(strength)
+        except:
+            fail_system.error('Gravity has to be of type float, not ' + str(type(strength)))
+            return False
+
+        if -100 > strength > 100:
+            fail_system.error('Gravity cannot be set to ' + str(
+                strength) + '. Please set it to a float number between -100 and 100.')
+        else:
+            self.gravity = strength / 10

@@ -107,7 +107,7 @@ def create_ui_element(name):
 def init_ee():
     unit_tests.Tests().run_all_tests()
     camera = create_sprite('camera')
-    camera.add_component('body')
+    camera.add_component('body').go_to((0, 0))
 
 
 def run_game():
@@ -135,18 +135,13 @@ def file_to_image(file_name):
         fail_system.error("File '" + str(file_name) + "' could not be found")
 
 
-def set_gravity(strength):
-    try:
-        strength = float(strength)
-    except:
-        fail_system.error('Gravity has to be of type float, not ' + str(type(strength)))
-        return False
-
-    if -100 > strength > 100:
-        fail_system.error('Gravity cannot be set to ' + str(strength) + '. Please set it to a float number betweenb -100 and 100.')
-    else:
-        global_data.gravity = strength
-
-
 def end():
     global_data.go = False
+
+
+def find_sprite(name):
+    print(sprite_controller.list_of_sprites)
+    name = str(name)
+    for i in sprite_controller.list_of_sprites:
+        if i.get_name() == name:
+            return i

@@ -10,15 +10,16 @@ def get_element(name):
 
 def run_ui():
     for i in list_of_ui:
-        try:
-            i.get_component('script').get_script().update()
-        except:
-            pass
-        if i.get_primary_component().run():
+        if i.get_state():
             try:
-                i.get_component('script').get_script().on_click()
+                i.get_component('script').get_script().update()
             except:
                 pass
+            if i.get_primary_component().run():
+                try:
+                    i.get_component('script').get_script().on_click()
+                except:
+                    pass
 
 
 class UIComponent:

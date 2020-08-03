@@ -10,10 +10,12 @@ class Image(sprite_controller.SpriteComponent):
 
     def set_image(self, image):
         self.image = image
+        return self
 
     def set_image_from_file(self, file_name):
         try:
             self.image = py.image.load(str(file_name))
+            return self
         except:
             fail_system.error("File '" + str(file_name) + "' could not be found")
 

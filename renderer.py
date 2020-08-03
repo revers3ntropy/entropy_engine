@@ -65,11 +65,11 @@ def render_sprites():
         if sprite_image is not False and sprite_image.get_image() is not None:
 
             sprite_coords = i.get_component('body').get_position()
-
             render_coords = (sprite_coords[0] + camera_coords[0], sprite_coords[1] + camera_coords[1])
             screen.blit(sprite_image.get_image(), render_coords)
 
 
 def render_ui():
     for i in ui_controller.list_of_ui:
-        i.render()
+        if i.get_state():
+            i.render()

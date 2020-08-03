@@ -1,6 +1,10 @@
 import script
-import EE_pygame_menu
 import fail_system
+import standard_button
+import switch_button
+import text_box
+import text_box_with_check
+import ui_text
 
 
 class Element:
@@ -9,6 +13,7 @@ class Element:
         self.name = name
         self.components = []
         self.primary_component = None
+        self.active = True
 
     def add_component(self, type):
         new_component = None
@@ -17,8 +22,15 @@ class Element:
 
         elif self.primary_component is None:
             if type == 'standard button':
-                new_component = EE_pygame_menu.StandardButton()
-                print('new: ' + str(new_component))
+                new_component = standard_button.StandardButton()
+            elif type == 'switch button':
+                new_component = switch_button.SwitchButton()
+            elif type == 'text box':
+                new_component = text_box.TextButton()
+            elif type == 'text box with check':
+                new_component = text_box_with_check.TextBoxWithCheck()
+            elif type == 'text':
+                new_component = ui_text.Text()
 
         if new_component is not None:
             if type in ('script', ''):
@@ -48,3 +60,9 @@ class Element:
     def render(self):
         if self.primary_component is not None:
             self.primary_component.render()
+
+    def set_state(self, state):
+        self.active = state
+
+    def get_state(self):
+        return self.active
