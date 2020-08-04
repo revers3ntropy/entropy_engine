@@ -27,7 +27,7 @@ import global_data
 # ------------------------------------------------------------------------------------------------
 #
 #	update_mouse_clicked  - updates the mouse clicks history
-#	check_mouse_collision - checks if thecurser is collising with a hitbox passed in
+#	check_mouse_collision - checks if the cursor is colliding with a hit box passed in
 #	check_new_click		  - checks for new mouse click
 #
 # ================================================================================================
@@ -35,7 +35,7 @@ import global_data
 # ================================================================================================
 #  update_mouse_clicked -- updates the mouse clicks history
 #
-#      Checks for a new mouse press, and based on that updtaes the global mouse click history.
+#      Checks for a new mouse press, and based on that updates the global mouse click history.
 #
 #  INPUT:  none
 #
@@ -52,9 +52,9 @@ def update_mouse_clicked():
 
 
 # ================================================================================================
-#  check_mouse_collision -- checks whether or not the curser is in a hit-box passed in
+#  check_mouse_collision -- checks whether or not the cursor is in a hit-box passed in
 #
-#      Checks whether or not the curser is inside a rectangle passed in, and returns te result.
+#      Checks whether or not the cursor is inside a rectangle passed in, and returns te result.
 #
 #  INPUT:  hit_box - tuple - a four-dimensional vector containing the coordinates of the top
 #							 left corner of the rect, and the size of the rect.

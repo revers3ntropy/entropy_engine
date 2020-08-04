@@ -16,6 +16,8 @@ def update_sprites():
                 component.tick_script()
             elif c_type == 'body':
                 component.physics_tick()
+            elif c_type == 'collider':
+                component.update_collision()
 
 
 class SpriteComponent:

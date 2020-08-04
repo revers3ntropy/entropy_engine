@@ -54,7 +54,7 @@ def set_window_size(size_x, size_y):
         size_y = int(size_y)
         size_x = int(size_x)
     except:
-        fail_system.error("Screen size cannot be set to (" + str(size_x) + ', ' + str(size_y) + "). Please set it to (int, int).")
+        fail_system.error("Screen size cannot be set to (" + str(size_x) + ', ' + str(size_y) + "). Please set it to (int, int). ", 'entropy_engine.set_window()')
     renderer.screen = py.display.set_mode((size_x, size_y))
 
 
@@ -82,6 +82,7 @@ def tick():
             return False
 
     time_controller.update_fps(start_time)
+    time_controller.tick += 1
 
     return True
 
@@ -99,7 +100,7 @@ def create_sprite(name):
 
 def create_ui_element(name):
     if ui_controller.get_element(name) is not False:
-        fail_system.error("UI element already exists with name '" + str(name) + "'")
+        fail_system.error("UI element already exists with name '" + str(name) + "'.", 'entropy_engine.create_ui_element')
         return False
 
     ui_id = len(ui_controller.list_of_ui)
@@ -138,7 +139,7 @@ def file_to_image(file_name):
     try:
         return py.image.load(str(file_name))
     except:
-        fail_system.error("File '" + str(file_name) + "' could not be found")
+        fail_system.error("File '" + str(file_name) + "' could not be found", 'entropy_engine.file_to_image()')
 
 
 def end():
@@ -167,6 +168,10 @@ def set_target_fps(fps):
         if 0 < fps < 10000:
             renderer.run_FPS = fps
         else:
-            fail_system.error('FPS cannot be set to ' + str(fps))
+            fail_system.error('FPS cannot be set to ' + str(fps), 'entropy_engine.set_target_fps() (6)')
     except:
-        fail_system.error('FPS cannot be set to ' + str(fps))
+        fail_system.error('FPS cannot be set to ' + str(fps), 'entropy_engine.set_target_fps() (8)')
+
+
+def get_current_tick():
+    return time_controller.tick

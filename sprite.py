@@ -19,12 +19,14 @@ class Sprite:
             new_component = image.Image()
         elif type == 'script':
             new_component = script.Script()
+        elif type == 'collider':
+            new_component = collider.Collider(self)
 
         if new_component is not None:
             self.components.append(new_component)
             return new_component
         else:
-            fail_system.error("component type '" + str(type) + "' doesn't exist")
+            fail_system.error("component type '" + str(type) + "' doesn't exist", 'sprite.Sprite.add_component()')
 
     def get_component(self, type):
         if type == 'script':

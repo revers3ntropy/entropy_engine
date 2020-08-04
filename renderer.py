@@ -1,7 +1,5 @@
 import pygame as py
 import sprite_controller
-import image
-import body
 import ui_controller
 
 # ================================================================================================

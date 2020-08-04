@@ -17,7 +17,7 @@ class Image(sprite_controller.SpriteComponent):
             self.image = py.image.load(str(file_name))
             return self
         except:
-            fail_system.error("File '" + str(file_name) + "' could not be found")
+            fail_system.error("File '" + str(file_name) + "' could not be found", 'image.Image.set_image_from_file()')
 
     def get_image(self):
         return self.image

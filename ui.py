@@ -40,7 +40,7 @@ class Element:
 
             return new_component
         else:
-            fail_system.error("component type '" + str(type) + "' doesn't exist")
+            fail_system.error("component type '" + str(type) + "' doesn't exist", 'ui.Element.add_component()')
 
     def get_component(self, type):
         for component in self.components:

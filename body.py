@@ -1,5 +1,4 @@
 import sprite_controller
-import math
 import renderer
 import fail_system
 import utilities
@@ -55,11 +54,11 @@ class Body(sprite_controller.SpriteComponent):
         try:
             strength = float(strength)
         except:
-            fail_system.error('Gravity has to be of type float, not ' + str(type(strength)))
+            fail_system.error('Gravity has to be of type float, not ' + str(type(strength)), 'body.Body.set_gravity() (4)')
             return False
 
         if -100 > strength > 100:
             fail_system.error('Gravity cannot be set to ' + str(
-                strength) + '. Please set it to a float number between -100 and 100.')
+                strength) + '. Please set it to a float number between -100 and 100.', 'body.Body.set_gravity() (11)')
         else:
             self.gravity = strength / 10

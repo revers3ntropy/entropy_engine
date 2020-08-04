@@ -15,11 +15,12 @@ import global_data
 #  CREATED: 2/8/20
 #
 # ================================================================================================
-def error(message):
+def error(message, location):
     if global_data.go:  # only prints once
         global_data.go = False  # prevents the main loop from running
         print('\n\n:-- Entropy Engine error --:\n')
         print('Error report:')
 
-    print('    ' + message)
-
+    print('    traceback: ' + location)
+    print('    message: ' + message)
+    print()
