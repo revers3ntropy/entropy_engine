@@ -48,6 +48,7 @@ class Body(sprite_controller.SpriteComponent):
 
     def physics_tick(self):
         self.apply_gravity()
+
         self.velocity = (self.velocity[0] * (1 / self.friction), self.velocity[1] * (1 / self.friction))
 
         if self.collider is not False:
@@ -56,6 +57,9 @@ class Body(sprite_controller.SpriteComponent):
 
     def apply_gravity(self):
         self.apply_force(0, self.gravity)
+
+    def counter_gravity(self):
+        self.apply_force(0, self.gravity * -1)
 
     def set_gravity(self, strength):
         try:
@@ -69,3 +73,7 @@ class Body(sprite_controller.SpriteComponent):
                 strength) + '. Please set it to a float number between -100 and 100.', 'body.Body.set_gravity() (11)')
         else:
             self.gravity = strength / 10
+
+    def jump(self, force):
+        self.move((0, -1))
+        self.apply_force(0, -force)

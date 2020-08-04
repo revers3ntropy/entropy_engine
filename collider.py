@@ -15,7 +15,7 @@ class Collider(sprite_controller.SpriteComponent):
         self.hit_box = hit_box.HitBox(renderer.mid_x, renderer.mid_y, self.size_x, self.size_y)
         self.is_trigger = True
         self.solid = True
-        self.bounce = 0.1
+        self.bounce = 0
 
     def start(self):
         self.sprite_scripts = self.sprite.get_component('script')
@@ -38,9 +38,11 @@ class Collider(sprite_controller.SpriteComponent):
                     pass
 
         if self.solid:
+            body.move((body.get_velocity()[0] * -1, body.get_velocity()[1] * -1))
             body.set_velocity(body.get_velocity()[0] * -self.bounce, body.get_velocity()[1] * -self.bounce)
 
     def update_collision(self, body):
+
         self.update_hit_box(body)
 
         touching = self.check_touching()
@@ -72,3 +74,11 @@ class Collider(sprite_controller.SpriteComponent):
             self.solid = new_value
         except:
             fail_system.error('solid cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_solid()')
+
+    def set_bounce(self, value):
+        try:
+            bounce = float(value)
+            if -1 > bounce > 1:
+                fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (4)')
+        except:
+            fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (6)')
