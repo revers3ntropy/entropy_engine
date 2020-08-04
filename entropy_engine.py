@@ -111,7 +111,7 @@ def create_ui_element(name):
     return new_element
 
 
-def init_ee():
+def init():
     unit_tests.Tests().run_all_tests()
     camera = create_sprite('camera')
     camera.add_component('body').go_to((0, 0))
