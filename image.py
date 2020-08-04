@@ -8,6 +8,9 @@ class Image(sprite_controller.SpriteComponent):
         super().__init__('image')
         self.image = None
 
+    def start(self):
+        pass
+
     def set_image(self, image):
         self.image = image
         return self

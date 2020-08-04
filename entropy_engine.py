@@ -118,8 +118,12 @@ def init_ee():
 
 
 def run_game():
+    sprite_controller.init_sprites()
+    ui_controller.init_ui()
+
     while global_data.go:
         tick()
+
     py.quit()
 
 

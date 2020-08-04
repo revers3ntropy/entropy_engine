@@ -14,7 +14,7 @@ class Sprite:
     def add_component(self, type):
         new_component = None
         if type == 'body' and self.get_component('body') is False:
-            new_component = body.Body()
+            new_component = body.Body(self)
         elif type == 'image' and self.get_component('image') is False:
             new_component = image.Image()
         elif type == 'script':
@@ -30,11 +30,11 @@ class Sprite:
 
     def get_component(self, type):
         if type == 'script':
-            components = []
+            scripts = []
             for component in self.components:
                 if component.type == type:
-                    components.append(component)
-            return components
+                    scripts.append(component)
+            return scripts
         else:
             for component in self.components:
                 if component.type == type:

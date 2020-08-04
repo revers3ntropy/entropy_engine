@@ -41,6 +41,9 @@ class TextButton(button.Buttons):
         self.selected = False
         self.max_length = max_length
 
+    def start(self):
+        pass
+
     # ================================================================================================
     #  display_box -- draws the box of the text-box
     #

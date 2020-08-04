@@ -34,6 +34,9 @@ class StandardButton(button.Buttons):
             renderer.background_colour[0] - 50, renderer.background_colour[1] - 50, renderer.background_colour[2] - 50)
         self.inside_colour = renderer.background_colour
 
+    def start(self):
+        pass
+
     # ================================================================================================
     #  display_box -- draws a box around the button
     #

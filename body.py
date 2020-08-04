@@ -5,14 +5,20 @@ import utilities
 
 
 class Body(sprite_controller.SpriteComponent):
-    def __init__(self):
+    def __init__(self, sprite):
         super().__init__('body')
+        self.sprite = sprite
+        self.collider = None
+
         self.position = (renderer.mid_x, renderer.mid_y)
         self.velocity = [0, 0]
         self.components = []
         self.mass = 1
         self.gravity = 0
         self.friction = 1
+
+    def start(self):
+        self.collider = self.sprite.get_component('collider')
 
     def change_velocity(self, x_component, y_component):
         self.velocity = utilities.add_vectors([x_component, y_component], self.velocity)
@@ -42,10 +48,11 @@ class Body(sprite_controller.SpriteComponent):
 
     def physics_tick(self):
         self.apply_gravity()
-
-        self.position = utilities.add_vectors(self.position, self.velocity)
-
         self.velocity = (self.velocity[0] * (1 / self.friction), self.velocity[1] * (1 / self.friction))
+
+        if self.collider is not False:
+            self.collider.update_collision(self)
+        self.position = utilities.add_vectors(self.position, self.velocity)
 
     def apply_gravity(self):
         self.apply_force(0, self.gravity)

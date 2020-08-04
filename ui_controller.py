@@ -8,6 +8,12 @@ def get_element(name):
     return False
 
 
+def init_ui():
+    for sprite in list_of_ui:
+        for component in sprite.get_components():
+            component.start()
+
+
 def run_ui():
     for i in list_of_ui:
         if i.get_state():

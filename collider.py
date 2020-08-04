@@ -1,21 +1,24 @@
 import sprite_controller
 import renderer
 import hit_box
+import fail_system
 
 
 class Collider(sprite_controller.SpriteComponent):
     def __init__(self, sprite):
         super().__init__('collider')
+        self.sprite = sprite
+        self.sprite_scripts = None
+
         self.size_x = 10
         self.size_y = 10
         self.hit_box = hit_box.HitBox(renderer.mid_x, renderer.mid_y, self.size_x, self.size_y)
-        self.is_trigger = False
+        self.is_trigger = True
         self.solid = True
-        self.bounce = 0.9
-        self.body = sprite.get_component('body')
-        self.scripts = []
-        if sprite.get_component('script') is not False:
-            self.scripts = sprite.get_component('script')
+        self.bounce = 0.1
+
+    def start(self):
+        self.sprite_scripts = self.sprite.get_component('script')
 
     def check_touching(self):
         touching = []
@@ -26,41 +29,39 @@ class Collider(sprite_controller.SpriteComponent):
 
         return touching
 
-    def collide(self, sprite):
-        print('collide')
+    def collide(self, collision_sprite, body):
         if self.is_trigger:
-            for i in self.scripts:
+            for i in self.sprite_scripts:
                 try:
-                    self.scripts[i].get_script().on_collision(sprite)
+                    i.get_script().on_collision(collision_sprite)
                 except:
                     pass
 
         if self.solid:
-            if self.body.get_velocity()[0] > 0.1:
-                self.body.set_velocity(self.body.get_velocity()[0] * -self.bounce, self.body.get_velocity()[1])
-            else:
-                self.body.set_velocity(0, self.body.get_velocity()[1])
+            body.set_velocity(body.get_velocity()[0] * -self.bounce, body.get_velocity()[1] * -self.bounce)
 
-            if self.body.get_velocity()[1] > 0.1:
-                self.body.set_velocity(self.body.get_velocity()[0], self.body.get_velocity()[1] * -self.bounce)
-            else:
-                self.body.set_velocity(self.body.get_velocity()[0], 0)
-
-    def update_collision(self):
-        self.update_hit_box()
+    def update_collision(self, body):
+        self.update_hit_box(body)
 
         touching = self.check_touching()
         for sprite in touching:
-            self.collide(sprite)
+            self.collide(sprite, body)
 
     def set_size(self, new_size):
         self.size_x = new_size[0]
         self.size_y = new_size[1]
 
-    def update_hit_box(self):
-        x = self.body.get_position()[0]
-        y = self.body.get_position()[1]
+    def update_hit_box(self, body):
+        x = body.get_position()[0]
+        y = body.get_position()[1]
         self.hit_box = hit_box.HitBox(x, y, self.size_x, self.size_y)
 
     def get_hit_box(self):
         return self.hit_box
+
+    def set_is_trigger(self, value):
+        try:
+            new_value = bool(value)
+            self.is_trigger = new_value
+        except:
+            fail_system.error('is_trigger cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_is_trigger()')

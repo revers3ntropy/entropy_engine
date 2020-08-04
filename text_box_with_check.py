@@ -44,6 +44,9 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
         self.check_function = check
         self.correct = False
 
+    def start(self):
+        pass
+
     # ================================================================================================
     #  display_box -- draws the box of the text-box
     #

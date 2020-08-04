@@ -8,14 +8,18 @@ def get_sprite(name):
     return False
 
 
+def init_sprites():
+    for sprite in list_of_sprites:
+        for component in sprite.get_components():
+            component.start()
+
+
 def update_sprites():
     for sprite in list_of_sprites:
         for component in sprite.get_components():
             c_type = component.get_type()
             if c_type == 'script':
                 component.tick_script()
-            elif c_type == 'collider':
-                component.update_collision()
             elif c_type == 'body':
                 component.physics_tick()
 

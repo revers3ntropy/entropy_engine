@@ -6,6 +6,9 @@ class Script(ui_controller.UIComponent):
         super().__init__('script')
         self.script = None
 
+    def start(self):
+        pass
+
     def set_script(self, script_class):
         self.script = script_class
         try:

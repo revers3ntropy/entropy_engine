@@ -25,5 +25,8 @@ class Text(button.Buttons):
             typing.fonts[self.font][typing.size_y] + 10)
         self.message = message
 
+    def start(self):
+        pass
+
     def render(self):
         self.display(self.message)

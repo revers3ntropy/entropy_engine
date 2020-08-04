@@ -29,6 +29,9 @@ class SwitchButton(button.Buttons):  # not used in this project, but I might as 
         self.hit_box = hit_box.HitBox(pos[0] - self.size_x / 2, pos[1] - typing.fonts[font][typing.size_y] / 2,
                                       self.size_x, typing.fonts[font][typing.size_y])
 
+    def start(self):
+        pass
+
     # ================================================================================================
     #  update_states -- pushed the state forward one
     #
