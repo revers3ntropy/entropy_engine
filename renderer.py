@@ -63,7 +63,7 @@ def render_sprites():
         if sprite_image is not False and sprite_image.get_image() is not None:
 
             sprite_coords = i.get_component('body').get_position()
-            render_coords = (round(sprite_coords[0] + camera_coords[0]), round(sprite_coords[1] + camera_coords[1]))
+            render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
             screen.blit(sprite_image.get_image(), render_coords)
 
 
