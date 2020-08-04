@@ -77,3 +77,13 @@ class SwitchButton(button.Buttons):  # not used in this project, but I might as 
 
     def render(self):
         self.display(self.states[self.current_state])
+
+    def set_states(self, list_of_states):
+        self.states = list_of_states
+
+    def set_starting_state(self, state):
+        # TODO: make it so you can either put in a string or a int
+        self.current_state = state
+
+    def get_current_state(self):
+        return self.states[self.current_state]

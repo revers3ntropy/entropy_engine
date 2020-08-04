@@ -128,7 +128,9 @@ def run_game():
 
 
 def keypress(key):
-    pass
+    if py.key.get_pressed()[key]:
+        return True
+    return False
 
 
 def get_mouse_position():
@@ -179,3 +181,4 @@ def set_target_fps(fps):
 
 def get_current_tick():
     return time_controller.tick
+

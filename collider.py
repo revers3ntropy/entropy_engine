@@ -65,3 +65,10 @@ class Collider(sprite_controller.SpriteComponent):
             self.is_trigger = new_value
         except:
             fail_system.error('is_trigger cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_is_trigger()')
+
+    def set_solid(self, value):
+        try:
+            new_value = bool(value)
+            self.solid = new_value
+        except:
+            fail_system.error('solid cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_solid()')
