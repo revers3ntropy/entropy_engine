@@ -64,7 +64,7 @@ def tick():
     py.display.flip()
     renderer.clock.tick(renderer.run_FPS)
 
-    renderer.screen.fill(renderer.background_colour)
+    renderer.render_background()
 
     renderer.render_ui()
     ui_controller.run_ui()

@@ -1,5 +1,6 @@
 import pygame as py
 import sprite_controller
+import fail_system
 import ui_controller
 
 # ================================================================================================
@@ -41,6 +42,8 @@ screen = py.display.set_mode((screen_x, screen_y))
 clock = py.time.Clock()
 
 screen.fill((255, 255, 255))
+background_images = []
+current_background = 0
 py.display.update()
 
 
@@ -52,6 +55,38 @@ def set_target_fps(new_fps):
 def set_background_colour(new_colour):
     global background_colour
     background_colour = new_colour
+
+
+def add_background_image(image):
+    global background_images
+    background_images = image
+
+
+def get_current_background_id():
+    return current_background
+
+
+def step_background():
+    global current_background
+    global background_images
+    if current_background < len(background_images):
+        current_background += 1
+    else:
+        current_background = 0
+
+
+def set_current_background(new_background_id):
+    global background_images
+    global current_background
+    if int(new_background_id) < 0 or int(new_background_id) > len(background_images):
+        fail_system.error('Background cannot be set to ' + str(new_background_id), 'renderer.set_current_background()')
+
+
+def render_background():
+    if not background_images:
+        screen.fill(background_colour)
+    else:
+        screen.blit(background_images[current_background], (mid_x, mid_y))
 
 
 def render_sprites():
