@@ -28,23 +28,26 @@ import ui_controller
 #
 # ================================================================================================
 
-screen_x = 1000
-screen_y = 600
-mid_x = screen_x / 2
-mid_y = screen_y / 2
+mid = (0, 0)
 
 run_FPS = 60
 
 background_colour = (255, 255, 255)
 
 py.init()
-screen = py.display.set_mode((screen_x, screen_y))
+screen = None
 clock = py.time.Clock()
 
-screen.fill((255, 255, 255))
 background_images = []
 current_background = 0
-py.display.update()
+
+
+def init_screen(size):
+    global screen
+    screen = py.display.set_mode((size[0], size[1]))
+
+    global mid
+    mid = (size[0] * 0.5, size[1] * 0.5)
 
 
 def set_target_fps(new_fps):

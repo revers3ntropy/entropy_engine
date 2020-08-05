@@ -14,7 +14,7 @@ class Text(button.Buttons):
     #  CREATED: 27/07/2020
     # ================================================================================================
     def __init__(self):
-        pos = (renderer.mid_x, renderer.mid_y)
+        pos = renderer.mid
         font = typing.retro_8x10
         message = 'sample text'
         max_length = len(message)

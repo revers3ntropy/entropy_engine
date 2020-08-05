@@ -10,7 +10,7 @@ class Body(sprite_controller.SpriteComponent):
         self.sprite = sprite
         self.collider = None
 
-        self.position = (renderer.mid_x, renderer.mid_y)
+        self.position = [0, 0]
         self.velocity = [0, 0]
         self.components = []
         self.mass = 1
@@ -33,7 +33,10 @@ class Body(sprite_controller.SpriteComponent):
         self.position = utilities.add_vectors(position_change, self.position)
 
     def go_to(self, new_coords):
-        self.position = new_coords
+        if self.sprite.get_name() == 'camera':
+            self.position = [new_coords[0] - renderer.mid[0], new_coords[1] - renderer.mid[1]]
+        else:
+            self.position = new_coords
 
     def get_position(self):
         return self.position

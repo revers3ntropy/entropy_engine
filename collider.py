@@ -1,5 +1,4 @@
 import sprite_controller
-import renderer
 import hit_box
 import fail_system
 
@@ -12,7 +11,7 @@ class Collider(sprite_controller.SpriteComponent):
 
         self.size_x = 10
         self.size_y = 10
-        self.hit_box = hit_box.HitBox(renderer.mid_x, renderer.mid_y, self.size_x, self.size_y)
+        self.hit_box = hit_box.HitBox(0, 0, self.size_x, self.size_y)
         self.is_trigger = True
         self.solid = True
         self.bounce = 0

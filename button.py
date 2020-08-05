@@ -99,7 +99,7 @@ class Buttons(ui_controller.UIComponent):
     #  CREATED: 27/07/2020
     # ================================================================================================
     def check_mouse(self, hit_box):
-        if curser.check_mouse_collision(hit_box.get_hitbox()):
+        if curser.check_mouse_collision(hit_box.get_hit_box()):
             self.moused = True
         else:
             self.moused = False

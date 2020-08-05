@@ -16,7 +16,7 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
     # ================================================================================================
     #  __init__
     #
-    #  INPUT:  x, y - int - coodinates of the Buttons
+    #  INPUT:  x, y - int - coordinates of the Buttons
     #		   font - int - which font should be used
     #		   initial_message - string - the message to be displayed when the button generates
     #		   max_length - int - the maximum number of characters the text-box can hold, also size
@@ -27,7 +27,7 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
     #  CREATED: 27/07/2020
     # ================================================================================================
     def __init__(self):
-        pos = (renderer.mid_x, renderer.mid_y)
+        pos = renderer.mid
         font = typing.retro_8x10
         initial_message = 'text box with check'
         max_length = len(initial_message)
@@ -126,31 +126,38 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
     #  CREATED: 27/07/2020
     # ================================================================================================
     def check_message(self):
-        if self.selected and global_data.typing_sticky_keys <= 0:
+        if self.selected:
             character = ''
             keys = py.key.get_pressed()
             for i in range(len(keys)):
                 try:
                     if keys[typing.typeable_characters_py_game[i]]:
-                        character = typing.typeable_characters[i]
-                        global_data.typing_sticky_keys = 20
+                        if global_data.typing_last_key != typing.typeable_characters_py_game[i] or global_data.typing_last_key <= 0:
+                            character = typing.typeable_characters[i]
+                            global_data.typing_sticky_keys = 20
+                            global_data.typing_last_key = typing.typeable_characters_py_game[i]
                 except IndexError:
                     pass
 
             if keys[py.K_BACKSPACE]:
-                global_data.typing_sticky_keys = 10
-                self.message = self.remove_last_character_from_message()
+                if global_data.typing_last_key != py.K_BACKSPACE or global_data.typing_last_key <= 0:
+                    global_data.typing_last_key = py.K_BACKSPACE
+                    global_data.typing_sticky_keys = 10
+                    self.message = self.remove_last_character_from_message()
 
             if keys[py.K_KP_ENTER]:
+                global_data.typing_last_key = py.K_KP_ENTER
                 global_data.typing_sticky_keys = 50
                 self.selected = False
                 global_data.writing = False
 
             if keys[py.K_SPACE]:
-                global_data.typing_sticky_keys = 10
-                character = ' '
+                if global_data.typing_last_key != py.K_SPACE or global_data.typing_last_key <= 0:
+                    global_data.typing_last_key = py.K_KP_ENTER
+                    global_data.typing_sticky_keys = 10
+                    character = ' '
 
-            if character != '':  # adds the input. tothe end of message if it is valid
+            if character != '':
                 if len(self.message) < self.max_length:
                     if self.message == self.initial_message:
                         self.message = character

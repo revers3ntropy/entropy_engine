@@ -22,7 +22,7 @@ class HitBox:
         return self.x
 
     def y_(self):
-        return self.x
+        return self.y
 
     def size_x_(self):
         return self.size_x
