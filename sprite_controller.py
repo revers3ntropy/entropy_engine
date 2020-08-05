@@ -16,12 +16,20 @@ def init_sprites():
 
 def update_sprites():
     for sprite in list_of_sprites:
-        for component in sprite.get_components():
-            c_type = component.get_type()
-            if c_type == 'script':
-                component.tick_script()
-            elif c_type == 'body':
-                component.physics_tick()
+        if sprite.get_name() != 'camera':
+            for component in sprite.get_components():
+                c_type = component.get_type()
+                if c_type == 'script':
+                    component.tick_script()
+                elif c_type == 'body':
+                    component.physics_tick()
+
+    for component in list_of_sprites[0].get_components():
+        c_type = component.get_type()
+        if c_type == 'script':
+            component.tick_script()
+        elif c_type == 'body':
+            component.physics_tick()
 
 
 class SpriteComponent:

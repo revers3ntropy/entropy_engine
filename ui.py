@@ -66,3 +66,6 @@ class Element:
 
     def get_state(self):
         return self.active
+
+    def get_components(self):
+        return self.components
