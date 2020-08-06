@@ -30,7 +30,7 @@ class Body(sprite_controller.SpriteComponent):
         return self.velocity
 
     def check_collision(self):
-        if self.collider.check_touching():
+        if len(self.collider.check_touching()) > 0:
             return True
         return False
 
@@ -40,7 +40,8 @@ class Body(sprite_controller.SpriteComponent):
         self.position = utilities.add_vectors(position_change, self.position)
 
         if self.check_collision():
-            self.position = previous_pos
+            # self.position = previous_pos
+            pass
 
     def go_to(self, new_coords):
         if self.sprite.get_name() == 'camera':
@@ -65,8 +66,11 @@ class Body(sprite_controller.SpriteComponent):
         self.velocity = (self.velocity[0] * (1 / self.friction), self.velocity[1] * (1 / self.friction))
 
         if self.collider is not False:
-            self.collider.update_collision(self)
+            self.collider.update_collision()
+
         self.position = utilities.add_vectors(self.position, self.velocity)
+        if self.collider is not False:
+            self.collider.update_hit_box()
 
     def apply_gravity(self):
         self.apply_force(0, self.gravity)

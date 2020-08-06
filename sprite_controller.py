@@ -19,11 +19,12 @@ def update_sprites():
         if sprite.get_name() != 'camera':
             for component in sprite.get_components():
                 c_type = component.get_type()
-                if c_type == 'script':
-                    component.tick_script()
-                elif c_type == 'body':
+                if c_type == 'body':
                     component.physics_tick()
+                elif c_type == 'script':
+                    component.tick_script()
 
+    # so that the sprite can't move after the camera has been updated
     for component in list_of_sprites[0].get_components():
         c_type = component.get_type()
         if c_type == 'script':

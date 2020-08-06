@@ -8,6 +8,7 @@ class Collider(sprite_controller.SpriteComponent):
         super().__init__('collider')
         self.sprite = sprite
         self.sprite_scripts = None
+        self.body = None
 
         self.size_x = 10
         self.size_y = 10
@@ -18,6 +19,7 @@ class Collider(sprite_controller.SpriteComponent):
 
     def start(self):
         self.sprite_scripts = self.sprite.get_component('script')
+        self.body = self.sprite.get_component('body')
 
     def check_touching(self):
         touching = []
@@ -25,12 +27,14 @@ class Collider(sprite_controller.SpriteComponent):
             if sprite.get_name() != self.sprite.get_name():
                 if sprite.get_component('collider') is not False:
                     if self.hit_box.check_hit_box_collision(sprite.get_component('collider').get_hit_box()):
-                        if sprite.get_component('collider').get_solid():
-                            touching.append(sprite)
+                        touching.append(sprite)
 
         return touching
 
-    def __collide(self, collision_sprite, body):
+    def __collide(self, collision_sprite):
+        if collision_sprite.get_name() == self.sprite.get_name():
+            return False
+
         if self.is_trigger:
             for i in self.sprite_scripts:
                 try:
@@ -38,25 +42,21 @@ class Collider(sprite_controller.SpriteComponent):
                 except:
                     pass
 
-        if self.solid:
-            body.move((-body.get_velocity()[0], -body.get_velocity()[1]))
-            body.set_velocity((body.get_velocity()[0] * -self.bounce, body.get_velocity()[1] * -self.bounce))
+        if self.solid and collision_sprite.get_component('collider').get_solid():
+            self.body.move((-self.body.get_velocity()[0], -self.body.get_velocity()[1]))
+            self.body.set_velocity((self.body.get_velocity()[0] * -self.bounce, self.body.get_velocity()[1] * -self.bounce))
 
-    def update_collision(self, body):
-
-        self.update_hit_box(body)
-
-        touching = self.check_touching()
-        for sprite in touching:
-            self.__collide(sprite, body)
+    def update_collision(self):
+        for sprite in self.check_touching():
+            self.__collide(sprite)
 
     def set_size(self, new_size):
         self.size_x = new_size[0]
         self.size_y = new_size[1]
 
-    def update_hit_box(self, body):
-        x = body.get_position()[0]
-        y = body.get_position()[1]
+    def update_hit_box(self):
+        x = self.body.get_position()[0]
+        y = self.body.get_position()[1]
         self.hit_box = hit_box.HitBox(x, y, self.size_x, self.size_y)
 
     def get_hit_box(self):
@@ -75,6 +75,9 @@ class Collider(sprite_controller.SpriteComponent):
             self.solid = new_value
         except:
             fail_system.error('solid cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_solid()')
+
+    def get_solid(self):
+        return self.solid
 
     def set_bounce(self, value):
         try:
