@@ -22,7 +22,7 @@ import time_controller
 #
 #                                       Created : August 05, 2020
 #
-#                                   Last Update : August 05, 2020
+#                                   Last Update : August 06, 2020
 #
 # ------------------------------------------------------------------------------------------------
 #
@@ -70,7 +70,7 @@ def init(screen_size):
 #
 #  CREATED: 00/00/2020
 # ================================================================================================
-def tick():
+def __tick():
     # for finding the current fps
     start_time = time.time()
 
@@ -107,7 +107,7 @@ def run_game():
     ui_controller.init_ui()
 
     while global_data.go:
-        tick()
+        __tick()
 
     py.quit()
     quit()
@@ -141,92 +141,28 @@ def create_ui_element(name):
     return new_element
 
 
-# ================================================================================================
-#  get_screen_size -- returns the size of the pygame screen
-#
-#  INPUT:  none
-#
-#  RETURNS:  renderer.screen_x, y - tuple[2, int] - the screen dimensions
-#
-#  CREATED: 05/08/2020
-# ================================================================================================
 def get_screen_size():
     return renderer.mid[0] * 2, renderer.mid[1] * 2
 
 
-# ================================================================================================
-#  force_screen_update -- forces the pygame window to refresh
-#
-#  INPUT:  none
-#
-#  RETURNS:  none
-#
-#  CREATED: 05/08/2020
-# ================================================================================================
 def force_screen_update():
     py.display.update()
 
 
-# ================================================================================================
-#  get_center -- returns the point at the center of the screen
-#
-#      returns the coordinates of the point a the center of the screen, or half the size of the
-#       window. Used for UI elements to centralise them.
-#
-#  INPUT:  none
-#
-#  RETURNS:  renderer.mid_x, y - tuple[2, int] - the midpoint of the screen
-#
-#  CREATED: 00/00/2020
-# ================================================================================================
 def get_center():
     return renderer.mid
 
 
-# ================================================================================================
-#  chaos -- returns the id of the font 'chaos_14x16'
-#
-#  INPUT:  none
-#
-#  RETURNS:  typing.chaos_14x16 - int - the id of the font
-#
-#  CREATED: 05/08/2020
-# ================================================================================================
 def chaos():
     return typing.chaos_14x16
 
 
-# ================================================================================================
-#  retro -- returns the id of the font 'retro_8x10'
-#
-#      returns the id of the font - this is the default font used, only used for if you want to
-#      change it back from another font.
-#
-#  INPUT:  none
-#
-#  RETURNS:  typing.retro_8x10 - int - the id of the font
-#
-#  CREATED: 00/00/2020
-# ================================================================================================
 def retro():
     return typing.retro_8x10
 
 
-# ================================================================================================
-#  set_window_title -- sets the caption of the pygame window
-#
-#       Sets the global variable window_title, which is set to the pygame caption every tick, in
-#       tick().
-#
-#  INPUT:  message - string - the message to be displayed
-#
-#  RETURNS:  none
-#
-#  CREATED: 05/08/2020
-# ================================================================================================
 def set_window_title(message):
     global_data.window_title = message
-
 
 
 def keypress(key):
@@ -251,7 +187,6 @@ def file_to_image(file_name):
 
 
 def find_sprite(name):
-    print(sprite_controller.list_of_sprites)
     name = str(name)
     for i in sprite_controller.list_of_sprites:
         if i.get_name() == name:

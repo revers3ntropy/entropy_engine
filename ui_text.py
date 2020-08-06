@@ -37,7 +37,7 @@ class Text(button.Buttons):
     def run(self):
         pass
 
-    def update_position(self):
+    def __update_position(self):
         self.hit_box = (
             self.x - self.size_x / 2 - 5, self.y - typing.fonts[self.font][typing.size_y] / 2 - 5, self.size_x + 10,
             typing.fonts[self.font][typing.size_y] + 10)
@@ -45,4 +45,4 @@ class Text(button.Buttons):
     def set_position(self, new_pos):
         self.x = new_pos[0]
         self.y = new_pos[1]
-        self.update_position()
+        self.__update_position()

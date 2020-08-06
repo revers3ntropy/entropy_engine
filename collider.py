@@ -19,7 +19,7 @@ class Collider(sprite_controller.SpriteComponent):
     def start(self):
         self.sprite_scripts = self.sprite.get_component('script')
 
-    def check_touching(self):
+    def __check_touching(self):
         touching = []
         for sprite in sprite_controller.list_of_sprites:
             if sprite.get_component('collider') is not False:
@@ -28,7 +28,7 @@ class Collider(sprite_controller.SpriteComponent):
 
         return touching
 
-    def collide(self, collision_sprite, body):
+    def __collide(self, collision_sprite, body):
         if self.is_trigger:
             for i in self.sprite_scripts:
                 try:
@@ -44,9 +44,9 @@ class Collider(sprite_controller.SpriteComponent):
 
         self.update_hit_box(body)
 
-        touching = self.check_touching()
+        touching = self.__check_touching()
         for sprite in touching:
-            self.collide(sprite, body)
+            self.__collide(sprite, body)
 
     def set_size(self, new_size):
         self.size_x = new_size[0]

@@ -132,7 +132,7 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
             for i in range(len(keys)):
                 try:
                     if keys[typing.typeable_characters_py_game[i]]:
-                        if global_data.typing_last_key != typing.typeable_characters_py_game[i] or global_data.typing_last_key <= 0:
+                        if global_data.typing_last_key != typing.typeable_characters_py_game[i] or global_data.typing_sticky_keys <= 0:
                             character = typing.typeable_characters[i]
                             global_data.typing_sticky_keys = 20
                             global_data.typing_last_key = typing.typeable_characters_py_game[i]
@@ -140,7 +140,7 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
                     pass
 
             if keys[py.K_BACKSPACE]:
-                if global_data.typing_last_key != py.K_BACKSPACE or global_data.typing_last_key <= 0:
+                if global_data.typing_last_key != py.K_BACKSPACE or global_data.typing_sticky_keys <= 0:
                     global_data.typing_last_key = py.K_BACKSPACE
                     global_data.typing_sticky_keys = 10
                     self.message = self.remove_last_character_from_message()
@@ -152,9 +152,9 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
                 global_data.writing = False
 
             if keys[py.K_SPACE]:
-                if global_data.typing_last_key != py.K_SPACE or global_data.typing_last_key <= 0:
-                    global_data.typing_last_key = py.K_KP_ENTER
-                    global_data.typing_sticky_keys = 10
+                if global_data.typing_last_key != py.K_SPACE or global_data.typing_sticky_keys <= 0:
+                    global_data.typing_last_key = py.K_SPACE
+                    global_data.typing_sticky_keys = 5
                     character = ' '
 
             if character != '':
