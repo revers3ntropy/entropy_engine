@@ -10,8 +10,8 @@ class Body(sprite_controller.SpriteComponent):
         self.sprite = sprite
         self.collider = None
 
-        self.position = [0, 0]
-        self.velocity = [0, 0]
+        self.position = (0, 0)
+        self.velocity = (0, 0)
         self.components = []
         self.mass = 1
         self.gravity = 0
@@ -23,14 +23,24 @@ class Body(sprite_controller.SpriteComponent):
     def change_velocity(self, x_component, y_component):
         self.velocity = utilities.add_vectors([x_component, y_component], self.velocity)
 
-    def set_velocity(self, x_component, y_component):
-        self.velocity = [x_component, y_component]
+    def set_velocity(self, new_velocity):
+        self.velocity = new_velocity
 
     def get_velocity(self):
         return self.velocity
 
+    def check_collision(self):
+        if self.collider.check_touching():
+            return True
+        return False
+
     def move(self, position_change):
+        previous_pos = self.position
+
         self.position = utilities.add_vectors(position_change, self.position)
+
+        if self.check_collision():
+            self.position = previous_pos
 
     def go_to(self, new_coords):
         if self.sprite.get_name() == 'camera':

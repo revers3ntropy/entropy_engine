@@ -19,12 +19,14 @@ class Collider(sprite_controller.SpriteComponent):
     def start(self):
         self.sprite_scripts = self.sprite.get_component('script')
 
-    def __check_touching(self):
+    def check_touching(self):
         touching = []
         for sprite in sprite_controller.list_of_sprites:
-            if sprite.get_component('collider') is not False:
-                if self.hit_box.check_hit_box_collision(sprite.get_component('collider').get_hit_box()):
-                    touching.append(sprite)
+            if sprite.get_name() != self.sprite.get_name():
+                if sprite.get_component('collider') is not False:
+                    if self.hit_box.check_hit_box_collision(sprite.get_component('collider').get_hit_box()):
+                        if sprite.get_component('collider').get_solid():
+                            touching.append(sprite)
 
         return touching
 
@@ -37,14 +39,14 @@ class Collider(sprite_controller.SpriteComponent):
                     pass
 
         if self.solid:
-            body.move((body.get_velocity()[0] * -1, body.get_velocity()[1] * -1))
-            body.set_velocity(body.get_velocity()[0] * -self.bounce, body.get_velocity()[1] * -self.bounce)
+            body.move((-body.get_velocity()[0], -body.get_velocity()[1]))
+            body.set_velocity((body.get_velocity()[0] * -self.bounce, body.get_velocity()[1] * -self.bounce))
 
     def update_collision(self, body):
 
         self.update_hit_box(body)
 
-        touching = self.__check_touching()
+        touching = self.check_touching()
         for sprite in touching:
             self.__collide(sprite, body)
 
@@ -79,5 +81,7 @@ class Collider(sprite_controller.SpriteComponent):
             bounce = float(value)
             if -1 > bounce > 1:
                 fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (4)')
+            else:
+                self.bounce = bounce
         except:
             fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (6)')

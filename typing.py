@@ -209,6 +209,7 @@ def write(font, message, pos):
                 letter_image = my_font[message[i]]
                 pos_y = pos[1] - my_font[size_y] / 2
                 pos_x = (i - (len(message) / 2)) * (my_font[size_x] + 5) + pos[0]
+
                 renderer.screen.blit(letter_image, (pos_x, pos_y))
 
 
@@ -235,4 +236,5 @@ def write_from_left(font, message, pos):
                 letter_image = my_font[message[i]]
                 pos_y = pos[1] - my_font[size_y] / 2
                 pos_x = i * (my_font[size_x] + 20) + pos[0]
+
                 renderer.screen.blit(letter_image, (pos_x, pos_y))

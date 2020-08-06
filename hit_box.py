@@ -18,18 +18,6 @@ class HitBox:
     def size(self):
         return self.size_x, self.size_y
 
-    def x_(self):
-        return self.x
-
-    def y_(self):
-        return self.y
-
-    def size_x_(self):
-        return self.size_x
-
-    def size_y_(self):
-        return self.size_y
-
     def check_point_collision(self, point):
         if utilities.check_collision(point, self.get_hit_box()):
             return True
@@ -39,21 +27,20 @@ class HitBox:
         if type(hit_box) != HitBox:
             fail_system.error('hit_box passed in has to be of type HitBox. it is a ' + str(type(hit_box)), 'hit_box.check_hit_box_collision()')
         else:
-            if self.check_point_collision((hit_box.x_(), hit_box.y_())):
-                return True
-            if self.check_point_collision((hit_box.x_() + hit_box.size_x_(), hit_box.y_())):
-                return True
-            if self.check_point_collision((hit_box.x_(), hit_box.y_() + hit_box.size_y_())):
-                return True
-            if self.check_point_collision((hit_box.x_() + hit_box.size_x_(), hit_box.y_() + hit_box.size_y_())):
+
+            if hit_box.x + hit_box.size_x < self.x:
+                return False
+
+            elif hit_box.x > self.x + self.size_x:
+                return False
+
+            elif hit_box.y + hit_box.size_y < self.y:
+                return False
+
+            elif hit_box.y > self.y + self.size_y:
+                return False
+
+            else:
                 return True
 
-            if utilities.check_collision((self.x, self.y), hit_box.get_hit_box()):
-                return True
-            if utilities.check_collision((self.x + self.size_x, self.y), hit_box.get_hit_box()):
-                return True
-            if utilities.check_collision((self.x, self.y + self.size_y), hit_box.get_hit_box()):
-                return True
-            if utilities.check_collision((self.x + self.size_x, self.y + self.size_y), hit_box.get_hit_box()):
-                return True
         return False

@@ -2,6 +2,7 @@ import pygame as py
 import sprite_controller
 import fail_system
 import ui_controller
+import global_data
 
 # ================================================================================================
 # |                                       Joseph Coppin                                         |
@@ -89,7 +90,12 @@ def render_background():
     if not background_images:
         screen.fill(background_colour)
     else:
-        screen.blit(background_images[current_background], (mid_x, mid_y))
+        screen.blit(background_images[current_background], (0, 0))
+
+
+def render_cursor():
+    if global_data.mouse_image is not None:
+        screen.blit(global_data.mouse_image, py.mouse.get_pos())
 
 
 def render_sprites():

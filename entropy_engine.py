@@ -11,6 +11,7 @@ import fail_system
 import unit_tests
 import time
 import time_controller
+import utilities
 
 # ================================================================================================
 # |                                       Joseph Coppin                                         |
@@ -44,6 +45,7 @@ import time_controller
 #   unit_tests
 #   time
 #   time_controller
+#   utilities
 #
 # ------------------------------------------------------------------------------------------------
 #
@@ -53,7 +55,8 @@ import time_controller
 
 
 def init(screen_size):
-    renderer.init_screen(screen_size)
+    new_screen_size = utilities.check_input(screen_size, tuple, ('screen_size cannot be ' + str(screen_size) + '. Must be of type tuple', 'entropy_engine.init()'))
+    renderer.init_screen(new_screen_size)
     unit_tests.Tests().run_all_tests()
     camera = create_sprite('camera')
     camera.add_component('body').go_to((0, 0))

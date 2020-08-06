@@ -7,3 +7,5 @@ typing_last_key = None
 window_title = 'entropy engine game'
 
 go = True
+
+mouse_image = None
