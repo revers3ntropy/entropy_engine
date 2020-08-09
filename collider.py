@@ -1,6 +1,7 @@
 import sprite_controller
 import hit_box
 import fail_system
+import utilities
 
 
 class Collider(sprite_controller.SpriteComponent):
@@ -24,66 +25,63 @@ class Collider(sprite_controller.SpriteComponent):
     def check_touching(self):
         touching = []
         for sprite in sprite_controller.list_of_sprites:
-            if sprite.get_name() != self.sprite.get_name():
+            if sprite.name != self.sprite.name:
                 if sprite.get_component('collider') is not False:
-                    if self.hit_box.check_hit_box_collision(sprite.get_component('collider').get_hit_box()):
+                    if self.hit_box.check_hit_box_collision(sprite.get_component('collider').hit_box):
                         touching.append(sprite)
 
         return touching
 
+    def __move_back(self):
+        self.body.move((-self.body.velocity[0], -self.body.velocity[1]))
+
     def __collide(self, collision_sprite):
-        if collision_sprite.get_name() == self.sprite.get_name():
+        if collision_sprite.name == self.sprite.name:
             return False
 
         if self.is_trigger:
             for i in self.sprite_scripts:
                 try:
-                    i.get_script().on_collision(collision_sprite)
+                    i.script.on_collision(collision_sprite)
                 except:
                     pass
 
-        if self.solid and collision_sprite.get_component('collider').get_solid():
-            self.body.move((-self.body.get_velocity()[0], -self.body.get_velocity()[1]))
-            self.body.set_velocity((self.body.get_velocity()[0] * -self.bounce, self.body.get_velocity()[1] * -self.bounce))
+        if self.solid and collision_sprite.get_component('collider').solid:
+            self.__move_back()
+            self.body.set_velocity((self.body.velocity[0] * -self.bounce, self.body.velocity[1] * -self.bounce))
 
     def update_collision(self):
         for sprite in self.check_touching():
             self.__collide(sprite)
 
-    def set_size(self, new_size):
-        self.size_x = new_size[0]
-        self.size_y = new_size[1]
+    def set_size(self, size):
+        new_size = utilities.check_vector2(size, int, 'collider.Collider.set_size(size)')
+        if new_size is not False:
+            self.size_x = new_size[0]
+            self.size_y = new_size[1]
 
     def update_hit_box(self):
-        x = self.body.get_position()[0]
-        y = self.body.get_position()[1]
+        x = self.body.position[0]
+        y = self.body.position[1]
         self.hit_box = hit_box.HitBox(x, y, self.size_x, self.size_y)
-
-    def get_hit_box(self):
-        return self.hit_box
 
     def set_is_trigger(self, value):
         try:
-            new_value = bool(value)
-            self.is_trigger = new_value
+            self.is_trigger = bool(value)
         except:
             fail_system.error('is_trigger cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_is_trigger()')
 
     def set_solid(self, value):
         try:
-            new_value = bool(value)
-            self.solid = new_value
+            self.solid = bool(value)
         except:
             fail_system.error('solid cannot be set to ' + str(value) + '. Please set it to either True or False.', 'collider.set_solid()')
-
-    def get_solid(self):
-        return self.solid
 
     def set_bounce(self, value):
         try:
             bounce = float(value)
-            if -1 > bounce > 1:
-                fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (4)')
+            if -100 > bounce > 100:
+                fail_system.error('Bounce range is -100 to 100, which does not include ' + str(value), 'collider.set_bounce() (4)')
             else:
                 self.bounce = bounce
         except:

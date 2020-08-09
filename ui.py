@@ -5,6 +5,7 @@ import switch_button
 import text_box
 import text_box_with_check
 import ui_text
+import utilities
 
 
 class Element:
@@ -13,7 +14,7 @@ class Element:
         self.name = name
         self.components = []
         self.primary_component = None
-        self.active = True
+        self.state = True
 
     def add_component(self, type):
         new_component = None
@@ -42,30 +43,38 @@ class Element:
         else:
             fail_system.error("component type '" + str(type) + "' doesn't exist", 'ui.Element.add_component()')
 
-    def get_component(self, type):
-        for component in self.components:
-            if component.get_type() == type:
-                return component
-        return False
+    def get_component(self, type_):
+        new_type = utilities.check_input(type_, str, (f'type cannot be of type {type(type_)}, must be of type str.',
+                                                      'sprite.get_component(type)'))
+        if new_type is not False:
+            if new_type == 'script':
+                scripts = []
+                for component in self.components:
+                    if component.type == new_type:
+                        scripts.append(component)
+                return scripts
+            else:
+
+                for component in self.components:
+                    if component.type == new_type:
+                        return component
+                return False
 
     def get_primary_component(self):
         return self.primary_component
 
-    def get_name(self):
-        return self.name
-
     def change_name(self, new_name):
-        self.name = new_name
+        try:
+            self.name = str(new_name)
+        except:
+            fail_system.error(f'Name cannot be set to {new_name}. Make sure it is of type str.', 'ui.Element.change_name(new_name)')
 
     def render(self):
         if self.primary_component is not None:
             self.primary_component.render()
 
     def set_state(self, state):
-        self.active = state
-
-    def get_state(self):
-        return self.active
-
-    def get_components(self):
-        return self.components
+        if type(state) == bool:
+            self.state = state
+        else:
+            fail_system.error(f'state cannot be of type {type(state)}, must be of type bool.', 'ui.Element.set_state(state)')

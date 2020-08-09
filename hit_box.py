@@ -19,8 +19,24 @@ class HitBox:
         return self.size_x, self.size_y
 
     def check_point_collision(self, point):
-        if utilities.check_collision(point, self.get_hit_box()):
-            return True
+        new_point = utilities.check_vector2(point, float, 'hit_box.HitBox.check_point_collision(point)')
+        if new_point is not False:
+
+            if point[0] < self.x:
+                return False
+
+            elif point[1] > self.x + self.size_x:
+                return False
+
+            elif point[0] < self.y:
+                return False
+
+            elif point[1] > self.y + self.size_y:
+                return False
+
+            else:
+                return True
+
         return False
 
     def check_hit_box_collision(self, hit_box):

@@ -1,6 +1,7 @@
 import typing
 import curser
 import ui_controller
+import utilities
 
 
 # ================================================================================================
@@ -122,8 +123,11 @@ class Buttons(ui_controller.UIComponent):
         return False
 
     def set_coordinates(self, coordinates):
-        self.x = coordinates[0]
-        self.y = coordinates[1]
+        new_coords = utilities.check_vector2(coordinates, float, 'button.Button.set_coordinates(coordinates)')
+        if new_coords is not False:
+            self.x = new_coords[0]
+            self.y = new_coords[1]
 
-    def set_font(self, new_font):
+    def set_font(self, font):
+        new_font = utilities.check_input(font, int, (f'font {font} does not exist. Make sure it is of type int.', 'button.Button.set_font(font)'))
         self.font = new_font

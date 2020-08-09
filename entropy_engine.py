@@ -14,65 +14,39 @@ import time_controller
 import utilities
 
 # ================================================================================================
-# |                                       Joseph Coppin                                         |
+# |-------------------------------------={ Joseph Coppin }=-------------------------------------|
 # ================================================================================================
 #
 #                                  Project Name : Entropy Engine
 #
 #                                     File Name : entropy_engine.py
 #
-#                                       Created : August 05, 2020
+# ------------------------------------------------------------------------------------------------
 #
-#                                   Last Update : August 06, 2020
+#      Controls the game engine. This is the file that the user accesses to use the engine.
 #
 # ------------------------------------------------------------------------------------------------
 #
-#   This is the file which is imported by the user. Contains top level functions for the user.
-#
-# ------------------------------------------------------------------------------------------------
-#
-# Imports:
-#   typing
-#   pygame as py
-#   global_data
-#   sprite_controller
-#   ui_controller
-#   curser
-#   renderer
-#   sprite
-#   ui
-#   fail_system
-#   unit_tests
-#   time
-#   time_controller
-#   utilities
-#
-# ------------------------------------------------------------------------------------------------
-#
-# global_function_1 - what this function does
+#   init - initialises the screen and game engine
+#   __tick - ticks the game engine forward one tick
+#   run_game - called at the end of the user file, runs the game
+#   end - prematurely ends the game, eg if they click a quit button
+#   create_sprite - returns and created a empty Sprite.
 #
 # ================================================================================================
 
 
 def init(screen_size):
-    new_screen_size = utilities.check_input(screen_size, tuple, ('screen_size cannot be ' + str(screen_size) + '. Must be of type tuple', 'entropy_engine.init()'))
-    renderer.init_screen(new_screen_size)
-    unit_tests.Tests().run_all_tests()
-    camera = create_sprite('camera')
-    camera.add_component('body').go_to((0, 0))
+    new_size = utilities.check_vector2(screen_size, int, 'entropy_engine.init(screen_size)')
+    if new_size is not False:
+
+        renderer.init_screen(new_size)
+
+        unit_tests.Tests().run_all_tests()
+        camera = create_sprite('camera')
+        camera.add_component('body').go_to((0, 0))
 
 
-# ================================================================================================
-#  tick -- controls each tick of the game
-#
-#      Controls rendering, physics ticks and the pygame display.
-#
-#  INPUT:  none
-#
-#  RETURNS:  none
-#
-#  CREATED: 00/00/2020
-# ================================================================================================
 def __tick():
     # for finding the current fps
     start_time = time.time()
@@ -82,19 +56,16 @@ def __tick():
         if event.type == py.QUIT:
             end()
 
-    # ticks the pygame display
-    py.display.set_caption(str(global_data.window_title))
-    py.display.flip()
-    renderer.clock.tick(renderer.run_FPS)
+    # controls the processing of sprites and ui elements
+    ui_controller.run_ui()
+    sprite_controller.update_sprites()
 
     # controls rendering of UI and sprites (keep this order)
     renderer.render_background()
     renderer.render_sprites()
     renderer.render_ui()
-
-    # controls the processing of sprites and ui elements
-    ui_controller.run_ui()
-    sprite_controller.update_sprites()
+    renderer.render_cursor()
+    renderer.tick_window()
 
     if global_data.typing_sticky_keys > 0:
         global_data.typing_sticky_keys -= 1
@@ -121,27 +92,32 @@ def end():
 
 
 def create_sprite(name):
-    if sprite_controller.get_sprite(name) is not False:
-        return False
-    sprite_id = len(sprite_controller.list_of_sprites)
+    new_name = utilities.check_input(name, str, ('Sprite cannot be created with type ' + str(type(name)) + '. Must be of type str.',
+                                                 'entropy_engine.create_sprite(name)'))
+    if new_name is not False:
+        if sprite_controller.get_sprite(new_name) is not False:
+            return False
+        sprite_id = len(sprite_controller.list_of_sprites)
 
-    new_spite = sprite.Sprite(sprite_id, name)
+        new_spite = sprite.Sprite(sprite_id, new_name)
 
-    sprite_controller.list_of_sprites.append(new_spite)
-    return new_spite
+        sprite_controller.list_of_sprites.append(new_spite)
+        return new_spite
 
 
 def create_ui_element(name):
-    if ui_controller.get_element(name) is not False:
-        fail_system.error("UI element already exists with name '" + str(name) + "'.", 'entropy_engine.create_ui_element')
-        return False
+    new_name = utilities.check_input(name, str, ('Name must of be of type str, not ' + str(type(name)) + '.', 'entropy_engine.create_ui_element(name)'))
+    if new_name is not False:
+        if ui_controller.get_element(new_name) is not False:
+            fail_system.error("UI element already exists with name '" + str(new_name) + "'.", 'entropy_engine.create_ui_element')
+        else:
 
-    ui_id = len(ui_controller.list_of_ui)
+            ui_id = len(ui_controller.list_of_ui)
 
-    new_element = ui.Element(ui_id, name)
+            new_element = ui.Element(ui_id, new_name)
 
-    ui_controller.list_of_ui.append(new_element)
-    return new_element
+            ui_controller.list_of_ui.append(new_element)
+            return new_element
 
 
 def get_screen_size():
@@ -165,13 +141,19 @@ def retro():
 
 
 def set_window_title(message):
-    global_data.window_title = message
+    new_message = utilities.check_input(message, str, ('Window title must be set to type str, not ' + str(type(message)) +
+                                                       '.', 'entropy_engine.set_window_title(message)'))
+    if new_message is not False:
+        global_data.window_title = new_message
 
 
 def keypress(key):
-    if py.key.get_pressed()[key]:
-        return True
-    return False
+    try:
+        if py.key.get_pressed()[key]:
+            return True
+        return False
+    except IndexError:
+        fail_system.error(str(key) + ' is not a valid key input.', 'entropy_engine.keypress(key)')
 
 
 def get_mouse_position():
@@ -183,17 +165,35 @@ def get_mouse_down():
 
 
 def file_to_image(file_name):
-    try:
-        return py.image.load(str(file_name))
-    except:
-        fail_system.error("File '" + str(file_name) + "' could not be found", 'entropy_engine.file_to_image()')
+    new_file_name = utilities.check_input(file_name, str, ('File name cannot be ' + str(file_name) + '. Must be of type str.', 'entropy_engine.file_to_image(file_name)'))
+    if new_file_name is not False:
+        try:
+            return py.image.load(str(new_file_name))
+        except:
+            fail_system.error("File '" + str(new_file_name) + "' could not be found", 'entropy_engine.file_to_image()')
 
 
 def find_sprite(name):
-    name = str(name)
-    for i in sprite_controller.list_of_sprites:
-        if i.get_name() == name:
-            return i
+    new_name = utilities.check_input(name, str, ('Sprite names cannot be of type ' + str(type(name)) + '. Are of type str.', 'entropy_engine.find_sprite(name)'))
+    if new_name is not False:
+
+        new_name = str(new_name)
+        for i in sprite_controller.list_of_sprites:
+            if i.name == new_name:
+                return i
+
+
+def find_all_with_tag(tag):
+    new_tag = utilities.check_input(tag, str, (f'Tag has to be of type str, not {type(tag)}.', ''))
+    if new_tag is not False:
+
+        sprites = []
+
+        for search in sprite_controller.list_of_sprites:
+            if search.tag == new_tag:
+                sprites.append(search)
+
+        return sprites
 
 
 def get_current_fps():
@@ -205,16 +205,18 @@ def get_target_fps():
 
 
 def set_target_fps(fps):
-    try:
-        fps = int(fps)
-        if 0 < fps < 10000:
-            renderer.run_FPS = fps
-        else:
-            fail_system.error('FPS cannot be set to ' + str(fps), 'entropy_engine.set_target_fps() (6)')
-    except:
-        fail_system.error('FPS cannot be set to ' + str(fps), 'entropy_engine.set_target_fps() (8)')
+    new_fps = utilities.check_input(fps, int, ('target FPS cannot be get to type ' + str(type(fps)) + '. Must be of type int.',
+                                               'entropy_engine.set_target_fps(fps)'))
+    if new_fps is not False:
+        try:
+            new_fps = int(new_fps)
+            if 0 < new_fps < 10000:
+                renderer.run_FPS = new_fps
+            else:
+                fail_system.error('FPS cannot be set to ' + str(new_fps), 'entropy_engine.set_target_fps() (6)')
+        except:
+            fail_system.error('FPS cannot be set to ' + str(new_fps), 'entropy_engine.set_target_fps() (8)')
 
 
 def get_current_tick():
     return time_controller.tick
-

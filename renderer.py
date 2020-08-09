@@ -3,7 +3,6 @@ import sprite_controller
 import fail_system
 import ui_controller
 import global_data
-
 # ================================================================================================
 # |                                       Joseph Coppin                                         |
 # ================================================================================================
@@ -36,8 +35,12 @@ run_FPS = 60
 background_colour = (255, 255, 255)
 
 py.init()
-screen = None
+
 clock = py.time.Clock()
+
+screen_size = width, height = 600, 400
+
+screen = py.display.set_mode(screen_size, py.RESIZABLE)
 
 background_images = []
 current_background = 0
@@ -49,6 +52,14 @@ def init_screen(size):
 
     global mid
     mid = (size[0] * 0.5, size[1] * 0.5)
+
+
+def tick_window():
+    py.display.update()
+    screen.fill(background_colour)
+
+    py.display.set_caption(str(global_data.window_title))
+    clock.tick(run_FPS)
 
 
 def set_target_fps(new_fps):
@@ -98,20 +109,30 @@ def render_cursor():
         screen.blit(global_data.mouse_image, py.mouse.get_pos())
 
 
-def render_sprites():
+def __render_sprite(body, sprite_image):
     camera = sprite_controller.list_of_sprites[0]
-    camera_coords = camera.get_component('body').get_position()
+    camera_coords = camera.get_component('body').position
 
+    sprite_coords = body.position
+    render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
+    screen.blit(sprite_image.image, render_coords)
+
+
+def render_sprites():
     for i in sprite_controller.list_of_sprites:
-        sprite_image = i.get_component('image')
-        if sprite_image is not False and sprite_image.get_image() is not None:
+        sprite_body = i.get_component('body')
 
-            sprite_coords = i.get_component('body').get_position()
-            render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
-            screen.blit(sprite_image.get_image(), render_coords)
+        sprite_image = i.get_component('image')
+        if sprite_image is not False and sprite_image.image is not None:
+            __render_sprite(sprite_body, sprite_image)
+
+        sprite_animation = i.get_component('animation')
+        if sprite_animation is not False and sprite_animation.renders:
+            current_render = sprite_animation.current_render
+            __render_sprite(sprite_body, sprite_animation.get_render(current_render))
 
 
 def render_ui():
     for i in ui_controller.list_of_ui:
-        if i.get_state():
+        if i.state:
             i.render()

@@ -8,15 +8,6 @@ import hit_box
 
 
 class TextButton(button.Buttons):
-    # ================================================================================================
-    #  __init__
-    #
-    #  INPUT:  none
-    #
-    #  RETURNS:  none
-    #
-    #  CREATED: 27/07/2020
-    # ================================================================================================
     def __init__(self):
         pos = renderer.mid
         font = typing.retro_8x10
@@ -60,9 +51,8 @@ class TextButton(button.Buttons):
             py.draw.rect(renderer.screen, self.selected_colour, self.hit_box.get_hit_box())
         else:
             py.draw.rect(renderer.screen, self.outside_colour, self.hit_box.get_hit_box())
-        new_hit_box = (self.hit_box.x_() + 2, self.hit_box.y_() + 2, self.hit_box.size_x_() - 4, self.hit_box.size_y_() - 4)
+        new_hit_box = (self.hit_box.x + 2, self.hit_box.y + 2, self.hit_box.size_x - 4, self.hit_box.size_y - 4)
         py.draw.rect(renderer.screen, self.inside_colour, new_hit_box)
-        print(self.hit_box.get_hit_box(), new_hit_box)
 
     # ================================================================================================
     #  check_selected -- updates whether or not the text-box has been selected or not

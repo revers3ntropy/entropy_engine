@@ -2,71 +2,51 @@ import button
 import renderer
 import typing
 import hit_box
+import fail_system
+import utilities
 
 
-class SwitchButton(button.Buttons):  # not used in this project, but I might as well include it
-    # ================================================================================================
-    #  __init__
-    #
-    #  INPUT:  x, y - int - coordinates of the button from the center
-    #		   font - int - what font should be used for the button
-    #		   states - list[n, string] - all states the button could be in, displayed on the button
-    #		   starting_state - int - which state should start on, normally 0
-    #
-    #  RETURNS:  none
-    #
-    #  CREATED: 00/00/2020
-    # ================================================================================================
+class SwitchButton(button.Buttons):
     def __init__(self):
-        pos = (renderer.mid_x, renderer.mid_y)
+        pos = (renderer.mid[0], renderer.mid[1])
         font = typing.retro_8x10
+
         super().__init__(pos, font, 'switch button')
+
         self.states = ['Type 1', 'Type 2']  # list of messages
         self.current_state = 0  # number to start on
-
         self.number_of_states = len(self.states)
-        self.size_x = (typing.fonts[font][typing.size_x] + 5) * len(self.states[self.current_state])
-        self.hit_box = hit_box.HitBox(pos[0] - self.size_x / 2, pos[1] - typing.fonts[font][typing.size_y] / 2,
-                                      self.size_x, typing.fonts[font][typing.size_y])
+
+        self.size_x = 0
+        self.hit_box = (0, 0, 0, 0)
+
+        self.selected_colour = utilities.create_colour((200, 200, 200))
+        self.outside_colour = utilities.create_colour((180, 180, 180))
+        self.inside_colour = utilities.create_colour(renderer.background_colour)
 
     def start(self):
-        pass
+        self.update_hit_box()
 
-    # ================================================================================================
-    #  update_states -- pushed the state forward one
-    #
-    #      moves the button forward one step, called when the button is pressed
-    #
-    #  INPUT:  none
-    #
-    #  RETURNS:  none
-    #
-    #  CREATED: 27/07/2020
-    # ================================================================================================
+    def update_hit_box(self):
+        self.size_x = (typing.fonts[self.font][typing.size_x] + 5) * len(self.states[self.current_state])
+
+        pos = (self.x - self.size_x / 2, self.y - typing.fonts[self.font][typing.size_y] / 2)
+        size = (self.size_x, typing.fonts[self.font][typing.size_y])
+        self.hit_box = hit_box.HitBox(pos[0], pos[1], size[0], size[1])
+
+    # moves the button forward one step, called when the button is pressed
     def update_state(self):
         if self.number_of_states > 2:
             if self.current_state >= self.number_of_states - 1:
                 self.current_state = 1
             else:
                 self.current_state += 1
-            self.size_x = (typing.fonts[self.font][typing.size_x] + 5) * len(self.states[self.current_state])
-            self.hit_box = (self.x - self.size_x / 2, self.y - typing.fonts[self.font][typing.size_y] / 2, self.size_x,
-                            typing.fonts[self.font][typing.size_y])
         else:
             if self.current_state == 1:
                 self.current_state = 0
             else:
                 self.current_state = 1
 
-    # ================================================================================================
-    #  run -- controls the button
-    #
-    #  INPUT:  none
-    #
-    #  RETURNS:  self.current_state - string - the current state of the button
-    #
-    #  CREATED: 00/00/2020
-    # ================================================================================================
     def run(self):
         self.check_mouse(self.hit_box)
 
@@ -82,8 +62,27 @@ class SwitchButton(button.Buttons):  # not used in this project, but I might as 
         self.states = list_of_states
 
     def set_starting_state(self, state):
-        # TODO: make it so you can either put in a string or a int
-        self.current_state = state
+        # for state based off its contents
+        if type(state) == str:
+            found = False
+            for i in range(len(self.states)):
+                if self.states[i] == state:
+                    found = True
+                    self.current_state = i
+
+            if found is False:
+                fail_system.error(f'State {str(state)} does not seem to exist.', 'switch_button.SwitchButton.set_starting_state(state) (8)')
+
+        new_state = utilities.check_input(state, int, (f'state has to be of type str, not {type(state)}.',
+                                                       'switch_button.SwitchButton.set_starting_state(state) (10)'))
+
+        # for state based of place in list
+        if new_state is not False:
+            if new_state < 0 or new_state > len(self.states):
+                fail_system.error(f'state number {new_state} does not seem to exist. Try making it between 0 and {len(self.states)}',
+                                  'switch_button.SwitchButton.set_starting_state(state) (13)')
+            else:
+                self.current_state = new_state
 
     def get_current_state(self):
         return self.states[self.current_state]
