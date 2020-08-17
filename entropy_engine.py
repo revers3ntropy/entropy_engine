@@ -12,6 +12,7 @@ import unit_tests
 import time
 import time_controller
 import utilities
+import colour
 
 # ================================================================================================
 # |-------------------------------------={ Joseph Coppin }=-------------------------------------|
@@ -32,6 +33,10 @@ import utilities
 #   run_game - called at the end of the user file, runs the game
 #   end - prematurely ends the game, eg if they click a quit button
 #   create_sprite - returns and created a empty Sprite.
+#   create_ui_element - returns and creates a empty ui element
+#   get_screen_size - returns the dimensions of the screen in pixels by pixels
+#   force_screen_update - forces the screen to refresh mid-tick
+#   get_center - returns the coordinates of the center of the screen
 #
 # ================================================================================================
 
@@ -220,3 +225,9 @@ def set_target_fps(fps):
 
 def get_current_tick():
     return time_controller.tick
+
+
+def new_colour(_colour):
+    new_colour = utilities.check_vector(_colour, int, 'entropy_engine.new_colour(colour)')
+    if new_colour is not False:
+        return colour.Colour(new_colour)

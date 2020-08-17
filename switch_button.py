@@ -1,9 +1,10 @@
 import button
 import renderer
 import typing
-import hit_box
+from hit_box import HitBox
 import fail_system
 import utilities
+import colour
 
 
 class SwitchButton(button.Buttons):
@@ -18,11 +19,11 @@ class SwitchButton(button.Buttons):
         self.number_of_states = len(self.states)
 
         self.size_x = 0
-        self.hit_box = (0, 0, 0, 0)
+        self.hit_box = HitBox(0, 0, 0, 0)
 
-        self.selected_colour = utilities.create_colour((200, 200, 200))
-        self.outside_colour = utilities.create_colour((180, 180, 180))
-        self.inside_colour = utilities.create_colour(renderer.background_colour)
+        self.selected_colour = colour.Colour((200, 200, 200))
+        self.outside_colour = colour.Colour((180, 180, 180))
+        self.inside_colour = colour.Colour(renderer.background_colour)
 
     def start(self):
         self.update_hit_box()
@@ -32,7 +33,7 @@ class SwitchButton(button.Buttons):
 
         pos = (self.x - self.size_x / 2, self.y - typing.fonts[self.font][typing.size_y] / 2)
         size = (self.size_x, typing.fonts[self.font][typing.size_y])
-        self.hit_box = hit_box.HitBox(pos[0], pos[1], size[0], size[1])
+        self.hit_box = HitBox(pos[0], pos[1], size[0], size[1])
 
     # moves the button forward one step, called when the button is pressed
     def update_state(self):

@@ -4,7 +4,8 @@ import pygame as py
 import global_data
 import curser
 import renderer
-import hit_box
+from hit_box import HitBox
+import colour
 
 
 class TextButton(button.Buttons):
@@ -20,13 +21,13 @@ class TextButton(button.Buttons):
         super().__init__(pos, font, 'text box')
 
         self.size_x = (typing.fonts[font][typing.size_x] + 5) * max_length
-        self.hit_box = hit_box.HitBox(
+        self.hit_box = HitBox(
             self.x - self.size_x / 2 - 5, self.y - typing.fonts[self.font][typing.size_y] / 2 - 5, self.size_x + 10,
             typing.fonts[self.font][typing.size_y] + 10)
 
-        self.outside_colour = (100, 100, 100)
-        self.inside_colour = (200, 200, 200)
-        self.selected_colour = (175, 175, 175)
+        self.selected_colour = colour.Colour((200, 200, 200))
+        self.outside_colour = colour.Colour((180, 180, 180))
+        self.inside_colour = colour.Colour(renderer.background_colour)
 
         self.selected = False
         self.max_length = max_length

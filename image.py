@@ -9,6 +9,8 @@ class Image(sprite_controller.SpriteComponent):
         super().__init__('image')
         self.image = None
 
+        self.offset = (0, 0)
+
     def start(self):
         pass
 
@@ -32,3 +34,9 @@ class Image(sprite_controller.SpriteComponent):
             except:
                 fail_system.error("File '" + str(file_name) + "' could not be found",
                                   'image.Image.set_image_from_file(file_name)')
+
+    def set_offset(self, offset):
+        new_offset = utilities.check_vector2(offset, int, 'image.Image.set_offset(offset)')
+        if new_offset is not False:
+
+            self.offset = new_offset

@@ -3,11 +3,11 @@ import fail_system
 
 
 class Colour:
-    def __init__(self, red, green, blue):
-        self.red = red
-        self.green = green
-        self.blue = blue
-        self.colour = (red, green, blue)
+    def __init__(self, colour):
+        self.red = colour[0]
+        self.green = colour[1]
+        self.blue = colour[2]
+        self.colour = colour
 
     # use negative number for lighter shade
     def get_darker(self, amount):

@@ -1,11 +1,13 @@
-import body
-import image
-import script
+from body import Body
+from image import Image
+from script import Script
+from collider import Collider
+from tag import Tag
+from animation import Animation
+from rect_renderer import RectRenderer
+
 import fail_system
-import collider
 import utilities
-import tag
-import animation
 
 
 class Sprite:
@@ -17,23 +19,44 @@ class Sprite:
         self.tag = ''
 
     def add_component(self, type_):
+        def fail():
+            fail_system.error(f'Cannot add component {type_}, as another component is interfering with it.', 'sprite.Sprite.add_component(type_)')
+
         new_component = None
-        if type_ == 'body' and self.get_component('body') is False:
-            new_component = body.Body(self)
-        elif type_ == 'image' and self.get_component('image') is False:
-            new_component = image.Image()
+        if type_ == 'body':
+            if self.get_component('body') is False:
+                new_component = Body(self)
+            else:
+                fail()
+
+        elif type_ == 'image':
+            if self.get_component('image') is False and self.get_component('rect renderer') is False and \
+                    self.get_component('circle renderer') is False:
+                new_component = Image()
+            else:
+                fail()
+
+        elif type_ == 'rect renderer':
+            if self.get_component('image') is False and self.get_component('rect renderer') is False and \
+                    self.get_component('circle renderer') is False:
+                new_component = RectRenderer(self)
+            else:
+                fail()
+
         elif type_ == 'script':
-            new_component = script.Script()
+            new_component = Script()
+
         elif type_ == 'collider':
-            new_component = collider.Collider(self)
+            new_component = Collider(self)
+
         elif type_ == 'animation':
-            new_component = animation.Animation(self)
+            new_component = Animation(self)
 
         if new_component is not None:
             self.components.append(new_component)
             return new_component
         else:
-            fail_system.error(f"component type {type(type_)} does not exist", 'sprite.Sprite.add_component()')
+            fail_system.error(f"component {type_} does not exist", 'sprite.Sprite.add_component()')
 
     def get_component(self, type_):
         new_type = utilities.check_input(type_, str, (f'type cannot be of type {type(type_)}, must be of type str.', 'sprite.get_component(type)'))
@@ -68,7 +91,7 @@ class Sprite:
                 pass
 
     def set_tag(self, tag_):
-        new_tag = utilities.check_input(tag_, tag.Tag, (f'Tag must of of type Tag, not of type {type(tag_)}.', 'sprite.Sprite.set_tag(tag_)'))
+        new_tag = utilities.check_input(tag_, Tag, (f'Tag must of of type Tag, not of type {type(tag_)}.', 'sprite.Sprite.set_tag(tag_)'))
         if new_tag is not False:
 
             self.tag = new_tag

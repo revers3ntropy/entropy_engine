@@ -4,6 +4,8 @@ import curser
 import renderer
 import global_data
 import pygame as py
+import colour
+from hit_box import HitBox
 
 
 def default_check(message):
@@ -13,35 +15,29 @@ def default_check(message):
 
 
 class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
-    # ================================================================================================
-    #  __init__
-    #
-    #  INPUT:  x, y - int - coordinates of the Buttons
-    #		   font - int - which font should be used
-    #		   initial_message - string - the message to be displayed when the button generates
-    #		   max_length - int - the maximum number of characters the text-box can hold, also size
-    #		   check - function - the function to check if the button should be red or green
-    #
-    #  RETURNS:  none
-    #
-    #  CREATED: 27/07/2020
-    # ================================================================================================
     def __init__(self):
         pos = renderer.mid
         font = typing.retro_8x10
-        initial_message = 'text box with check'
+
+        initial_message = 'text box'
         max_length = len(initial_message)
-        check = default_check
-        super().__init__(pos, font, 'text box with check')
-        self.size_x = (typing.fonts[font][typing.size_x] + 5) * max_length
-        self.hit_box = (
-            self.x - self.size_x / 2 - 5, self.y - typing.fonts[self.font][typing.size_y] / 2 - 5, self.size_x + 10,
-            typing.fonts[self.font][typing.size_y] + 10)
         self.message = initial_message
         self.initial_message = initial_message
+
+        super().__init__(pos, font, 'text box')
+
+        self.size_x = (typing.fonts[font][typing.size_x] + 5) * max_length
+        self.hit_box = HitBox(
+            self.x - self.size_x / 2 - 5, self.y - typing.fonts[self.font][typing.size_y] / 2 - 5, self.size_x + 10,
+            typing.fonts[self.font][typing.size_y] + 10)
+
+        self.selected_colour = colour.Colour((200, 200, 200))
+        self.outside_colour = colour.Colour((180, 180, 180))
+        self.inside_colour = colour.Colour(renderer.background_colour)
+
         self.selected = False
         self.max_length = max_length
-        self.check_function = check
+        self.check_function = default_check
         self.correct = False
 
     def start(self):
@@ -50,7 +46,7 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
     # ================================================================================================
     #  display_box -- draws the box of the text-box
     #
-    #      draws the two rectagles which make the text box based on the hitbox and wether the mouse
+    #      draws the two rectangles which make the text box based on the hit box and whether the mouse
     #		is touching the text-box or not. The outline colour is determined by the result of
     #		running the self.check function
     #
@@ -64,19 +60,22 @@ class TextBoxWithCheck(button.Buttons):  # very similar to TextButton
 
         if self.check_function(self.message):
             self.correct = True
-            colour = (50, 255, 50)
+            colour_ = (50, 255, 50)
         else:
             self.correct = False
-            colour = (255, 50, 50)
+            colour_ = (255, 50, 50)
 
-        py.draw.rect(renderer.screen, colour, self.hit_box)
-        new_hit_box = (self.hit_box[0] + 2, self.hit_box[1] + 2, self.hit_box[2] - 4, self.hit_box[3] - 4)
+        py.draw.rect(renderer.screen, colour_, self.hit_box)
+        new_hit_box = (
+            self.hit_box.hit_box()[0] + 2, self.hit_box.hit_box()[1] + 2,
+            self.hit_box.hit_box()[2] - 4, self.hit_box.hit_box()[3] - 4
+        )
         py.draw.rect(renderer.screen, (200, 200, 200), new_hit_box)
 
     # ================================================================================================
-    #  check_selected -- updates wether or not the text-box has been selected or not
+    #  check_selected -- updates whether or not the text-box has been selected or not
     #
-    #      checks if there has been a click, and wehter the text-box is being touched by the moused
+    #      checks if there has been a click, and whether the text-box is being touched by the moused
     #		and then updates self.selected and global_data.writing.
     #
     #  INPUT:  none

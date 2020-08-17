@@ -9,7 +9,7 @@ class HitBox:
         self.size_x = size_x
         self.size_y = size_y
 
-    def get_hit_box(self):
+    def hit_box(self):
         return self.x, self.y, self.size_x, self.size_y
 
     def position(self):
@@ -60,3 +60,17 @@ class HitBox:
                 return True
 
         return False
+
+    def set_size(self, size):
+        new_size = utilities.check_vector2(size, int, 'hit_box.HitBox.set_size(size)')
+        if new_size is not False:
+
+            self.size_x = new_size[0]
+            self.size_y = new_size[1]
+
+    def set_position(self, position):
+        new_position = utilities.check_vector2(position, int, 'hit_box.HitBox.set_size(size)')
+        if new_position is not False:
+
+            self.x = new_position[0]
+            self.y = new_position[1]

@@ -109,13 +109,21 @@ def render_cursor():
         screen.blit(global_data.mouse_image, py.mouse.get_pos())
 
 
-def __render_sprite(body, sprite_image):
+def __render_sprite(body, sprite_image, rect_renderer, circle_renderer):
     camera = sprite_controller.list_of_sprites[0]
     camera_coords = camera.get_component('body').position
 
     sprite_coords = body.position
     render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
-    screen.blit(sprite_image.image, render_coords)
+
+    if sprite_image is not False:
+        render_coords = (render_coords[0] + sprite_image.offset[0], render_coords[0] + sprite_image.offset[0])
+        screen.blit(sprite_image.image, render_coords)
+
+    elif rect_renderer is not False:
+        render_coords = (render_coords[0] + rect_renderer.offset[0], render_coords[0] + rect_renderer.offset[0])
+        render_size = rect_renderer.size
+        py.draw.rect(screen, rect_renderer.colour, (render_coords[0], render_coords[1], render_size[0], render_size[1]))
 
 
 def render_sprites():
