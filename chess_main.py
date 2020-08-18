@@ -18,21 +18,19 @@ for i in range(8):
         sq = ee.create_sprite(f'sq {i},{j}')
 
         sq_body = sq.add_component('body')
-        sq_body.go_to((i * square_size, j * square_size))
 
         square = sq.add_component('rect renderer')
         square.set_size((square_size, square_size))
 
-        if (i + j) % 2 == 0:
+        if j % 2 == 0:
             colour = (200, 200, 200)  # light squares
         else:
             colour = (15, 15, 15)  # dark squares
-            print(colour)
         square.set_colour(colour)
 
         squares.append(sq)
 
-board_controller.set_script(BoardController(squares))
+board_controller.set_script(BoardController(squares, square_size))
 
 # moving the camera
 ee.find_sprite('camera').get_component('body').go_to(board_offset)

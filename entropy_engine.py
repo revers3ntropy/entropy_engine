@@ -101,6 +101,7 @@ def create_sprite(name):
                                                  'entropy_engine.create_sprite(name)'))
     if new_name is not False:
         if sprite_controller.get_sprite(new_name) is not False:
+            fail_system.error(f'Sprite {new_name} already exists.', 'entropy_engine.create_sprite(name)')
             return False
         sprite_id = len(sprite_controller.list_of_sprites)
 
