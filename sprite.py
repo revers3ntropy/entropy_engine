@@ -61,6 +61,7 @@ class Sprite:
     def get_component(self, type_):
         new_type = utilities.check_input(type_, str, (f'type cannot be of type {type(type_)}, must be of type str.', 'sprite.get_component(type)'))
         if new_type is not False:
+
             if new_type == 'script':
                 scripts = []
                 for component in self.components:

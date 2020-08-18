@@ -5,13 +5,13 @@ import fail_system
 
 class RectRenderer(sprite_controller.SpriteComponent):
     def __init__(self, sprite):
-        super().__init__('rect_renderer')
+        super().__init__('rect renderer')
         self.sprite = sprite
         self.body = None
 
         self.offset = (0, 0)
         self.colour = (255, 10, 10)
-        self.size = (0, 0)
+        self.size = (10, 10)
 
     def start(self):
         self.body = self.sprite.get_component('body')

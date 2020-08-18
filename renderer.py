@@ -109,35 +109,34 @@ def render_cursor():
         screen.blit(global_data.mouse_image, py.mouse.get_pos())
 
 
-def __render_sprite(body, sprite_image, rect_renderer, circle_renderer):
-    camera = sprite_controller.list_of_sprites[0]
-    camera_coords = camera.get_component('body').position
+def __render_sprite(sprite, camera_coords):
 
-    sprite_coords = body.position
-    render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
+    sprite_body = sprite.get_component('body')
+    if sprite_body is not False:
 
-    if sprite_image is not False:
-        render_coords = (render_coords[0] + sprite_image.offset[0], render_coords[0] + sprite_image.offset[0])
-        screen.blit(sprite_image.image, render_coords)
+        sprite_coords = sprite_body.position
+        render_coords = (round(sprite_coords[0] + -camera_coords[0]), round(sprite_coords[1] + -camera_coords[1]))
 
-    elif rect_renderer is not False:
-        render_coords = (render_coords[0] + rect_renderer.offset[0], render_coords[0] + rect_renderer.offset[0])
-        render_size = rect_renderer.size
-        py.draw.rect(screen, rect_renderer.colour, (render_coords[0], render_coords[1], render_size[0], render_size[1]))
+        sprite_image = sprite.get_component('image')
+
+        if sprite_image is not False:
+            if sprite_image.image:
+                render_coords = (render_coords[0] + sprite_image.offset[0], render_coords[0] + sprite_image.offset[0])
+                screen.blit(sprite_image.image, render_coords)
+
+        sprite_rect = sprite.get_component('rect renderer')
+        if sprite_rect is not False:
+            render_coords = (render_coords[0] + sprite_rect.offset[0], render_coords[0] + sprite_rect.offset[0])
+            render_size = sprite_rect.size
+            py.draw.rect(screen, sprite_rect.colour, (render_coords[0], render_coords[1], render_size[0], render_size[1]))
 
 
 def render_sprites():
+    camera = sprite_controller.list_of_sprites[0]
+    camera_coords = camera.get_component('body').position
+
     for i in sprite_controller.list_of_sprites:
-        sprite_body = i.get_component('body')
-
-        sprite_image = i.get_component('image')
-        if sprite_image is not False and sprite_image.image is not None:
-            __render_sprite(sprite_body, sprite_image)
-
-        sprite_animation = i.get_component('animation')
-        if sprite_animation is not False and sprite_animation.renders:
-            current_render = sprite_animation.current_render
-            __render_sprite(sprite_body, sprite_animation.get_render(current_render))
+        __render_sprite(i, camera_coords)
 
 
 def render_ui():

@@ -2,6 +2,7 @@ import sprite_controller
 import hit_box
 import fail_system
 import utilities
+import pygame as py
 
 
 class Collider(sprite_controller.SpriteComponent):
@@ -86,3 +87,13 @@ class Collider(sprite_controller.SpriteComponent):
                 self.bounce = bounce
         except:
             fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value), 'collider.set_bounce() (6)')
+
+    def get_moused(self):
+        if self.hit_box.check_point_collision(py.mouse.get_pos()):
+            return True
+        return False
+
+    def get_clicked(self):
+        if self.get_moused() and py.mouse.get_pressed()[0]:
+            return True
+        return False
