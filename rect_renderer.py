@@ -1,6 +1,6 @@
 import sprite_controller
 import utilities
-import fail_system
+import colour
 
 
 class RectRenderer(sprite_controller.SpriteComponent):
@@ -10,8 +10,8 @@ class RectRenderer(sprite_controller.SpriteComponent):
         self.body = None
 
         self.offset = (0, 0)
-        self.colour = (255, 10, 10)
         self.size = (10, 10)
+        self.colour = colour.Colour((255, 10, 10))
 
     def start(self):
         self.body = self.sprite.get_component('body')
@@ -27,19 +27,9 @@ class RectRenderer(sprite_controller.SpriteComponent):
         if new_offset is not False:
             self.offset = new_offset
 
-    def set_colour(self, colour):
-        new_colour = utilities.check_vector(colour, int, 'image.Image.set_offset(offset)')
+    def set_colour(self, colour_):
+        new_colour = utilities.check_input(colour_, colour.Colour, (f'Colour cannot be set to {colour_}. Make sure it is of type Colour.', 'rect_renderer.RectRenderer.set_colour(colour)'))
         if new_colour is not False:
-            if len(colour) == 3:
 
-                good = True
-                for i in range(3):
-                    if 255 <= new_colour[i] <= 0:
-                        good = False
+            self.colour = new_colour
 
-                if good:
-                    self.offset = new_colour
-                    return True
-
-        fail_system.error(f'Colour cannot be set to {colour}. Make sure each value is between 0 and 255, and there are only three values',
-                          'rect_renderer.RectRenderer.set_colour(colour)')

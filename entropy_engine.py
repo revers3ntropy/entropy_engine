@@ -103,6 +103,7 @@ def create_sprite(name):
         if sprite_controller.get_sprite(new_name) is not False:
             fail_system.error(f'Sprite {new_name} already exists.', 'entropy_engine.create_sprite(name)')
             return False
+
         sprite_id = len(sprite_controller.list_of_sprites)
 
         new_spite = sprite.Sprite(sprite_id, new_name)
@@ -231,4 +232,15 @@ def get_current_tick():
 def new_colour(_colour):
     new_colour = utilities.check_vector(_colour, int, 'entropy_engine.new_colour(colour)')
     if new_colour is not False:
-        return colour.Colour(new_colour)
+        if len(new_colour) == 3:
+            good = True
+            for i in range(3):
+                if 0 > new_colour[i] > 255:
+                    good = False
+
+            if good:
+                return colour.Colour(new_colour)
+
+    fail_system.error(f'Cannot create colour {new_colour}. Make sure there are three elements between 0 and 255.',
+                      'entropy_engine.new_colour(_colour)')
+    return False

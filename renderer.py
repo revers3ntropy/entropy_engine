@@ -128,7 +128,8 @@ def __render_sprite(sprite, camera_coords):
         if sprite_rect is not False:
             render_coords = (render_coords[0] + sprite_rect.offset[0], render_coords[0] + sprite_rect.offset[0])
             render_size = sprite_rect.size
-            py.draw.rect(screen, sprite_rect.colour, (render_coords[0], render_coords[1], render_size[0], render_size[1]))
+            colour = sprite_rect.colour.colour
+            py.draw.rect(screen, colour, (render_coords[0], render_coords[1], render_size[0], render_size[1]))
 
 
 def render_sprites():

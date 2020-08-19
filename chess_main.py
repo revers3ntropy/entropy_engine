@@ -12,23 +12,27 @@ square_size = 50
 squares = []
 board_offset = (500, 400)
 
+dark_square = ee.new_colour((15, 15, 15))
+light_square = ee.new_colour((200, 200, 200))
+
 for i in range(8):
     for j in range(8):
         # create square
         sq = ee.create_sprite(f'sq {i},{j}')
 
         sq_body = sq.add_component('body')
+        sq_body.go_to((i * square_size, j * square_size))
 
         square = sq.add_component('rect renderer')
         square.set_size((square_size, square_size))
 
+'''
         if j % 2 == 0:
-            colour = (200, 200, 200)  # light squares
+            square.set_colour(light_square)
         else:
-            colour = (15, 15, 15)  # dark squares
-        square.set_colour(colour)
+            square.set_colour(dark_square)
 
-        squares.append(sq)
+        squares.append(sq)'''
 
 board_controller.set_script(BoardController(squares, square_size))
 
