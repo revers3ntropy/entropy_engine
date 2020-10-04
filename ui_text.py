@@ -33,7 +33,6 @@ class Text(button.Buttons):
         self.display(self.message)
 
     def set_text(self, new_text):
-        print(1)
         self.message = str(new_text)
 
     def run(self):
@@ -45,7 +44,7 @@ class Text(button.Buttons):
             typing.fonts[self.font][typing.size_y] + 10)
 
     def set_position(self, position):
-        new_pos = utilities.check_vector2(position, float, 'ui_text.Text.set_position')
+        new_pos = utilities.check_vector2(position, float)
         if new_pos is not False:
             self.x = new_pos[0]
             self.y = new_pos[1]

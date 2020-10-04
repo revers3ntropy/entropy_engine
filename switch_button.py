@@ -2,7 +2,6 @@ import button
 import renderer
 import typing
 from hit_box import HitBox
-import fail_system
 import utilities
 import colour
 
@@ -29,7 +28,8 @@ class SwitchButton(button.Buttons):
         self.update_hit_box()
 
     def update_hit_box(self):
-        self.size_x = (typing.fonts[self.font][typing.size_x] + 5) * len(self.states[self.current_state])
+        self.size_x = (typing.fonts[self.font][typing.size_x] + 5) * len(
+            self.states[self.current_state])
 
         pos = (self.x - self.size_x / 2, self.y - typing.fonts[self.font][typing.size_y] / 2)
         size = (self.size_x, typing.fonts[self.font][typing.size_y])
@@ -72,18 +72,19 @@ class SwitchButton(button.Buttons):
                     self.current_state = i
 
             if found is False:
-                fail_system.error(f'State {str(state)} does not seem to exist.', 'switch_button.SwitchButton.set_starting_state(state) (8)')
+                raise Exception(f'State {str(state)} does not seem to exist.')
 
-        new_state = utilities.check_input(state, int, (f'state has to be of type str, not {type(state)}.',
-                                                       'switch_button.SwitchButton.set_starting_state(state) (10)'))
+        new_state = utilities.check_input(state, int)
 
         # for state based of place in list
         if new_state is not False:
             if new_state < 0 or new_state > len(self.states):
-                fail_system.error(f'state number {new_state} does not seem to exist. Try making it between 0 and {len(self.states)}',
-                                  'switch_button.SwitchButton.set_starting_state(state) (13)')
+                raise Exception(
+                    f'State number {new_state} does not seem to exist. Try making it between 0 and {len(self.states)}')
             else:
                 self.current_state = new_state
+
+        raise Exception(f'State {state} could not be found. Make sure it is either of type int or str.')
 
     def get_current_state(self):
         return self.states[self.current_state]

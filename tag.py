@@ -1,5 +1,3 @@
-import fail_system
-
 tags = []
 
 
@@ -9,15 +7,13 @@ class Tag:
 
 
 def find_tag(name):
-    name = str(name)
     for tag in tags:
-        if tag.name == name:
+        if tag.name == str(name):
             return tag
 
     return False
 
 
 def create_tag(name):
-    name = str(name)
     if find_tag(name) is False:
-        tags.append(Tag(name))
+        tags.append(Tag(str(name)))

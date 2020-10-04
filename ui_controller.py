@@ -1,8 +1,6 @@
 class UIController:
-    def __init__(self, test):
-        print('initiated ui controller')
+    def __init__(self):
         self.list_of_ui = []
-        print(test)
 
     def get_element(self, name):
         for i in self.list_of_ui:
@@ -34,5 +32,5 @@ class UIController:
 
 
 class UIComponent:
-    def __init__(self, type):
-        self.type = type
+    def __init__(self, type_):
+        self.type = type_

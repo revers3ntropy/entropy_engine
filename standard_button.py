@@ -3,7 +3,6 @@ import typing
 import pygame as py
 import renderer
 from hit_box import HitBox
-import utilities
 import colour
 
 
@@ -72,7 +71,4 @@ class StandardButton(button.Buttons):
         self.display(self.message)
 
     def set_message(self, message):
-        new_message = utilities.check_input(message, str, (f'Message cannot be set to {message}. Please make sure that it is of type str.',
-                                                           'standard_button.StandardButton.set_message(message)'))
-        if new_message is not False:
-            self.message = new_message
+        self.message = str(message)

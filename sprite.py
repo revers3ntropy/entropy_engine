@@ -1,12 +1,11 @@
 from body import Body
 from image import Image
-from script import Script
+from script import ScriptComponent
 from collider import Collider
 from tag import Tag
 from animation import Animation
 from rect_renderer import RectRenderer
 
-import fail_system
 import utilities
 
 
@@ -20,7 +19,7 @@ class Sprite:
 
     def add_component(self, type_):
         def fail():
-            fail_system.error(f'Cannot add component {type_}, as another component is interfering with it.', 'sprite.Sprite.add_component(type_)')
+            raise Exception(f'Cannot add component {type_}, as another component is interfering with it.', 'sprite.Sprite.add_component(type_)')
 
         new_component = None
         if type_ == 'body':
@@ -44,7 +43,7 @@ class Sprite:
                 fail()
 
         elif type_ == 'script':
-            new_component = Script()
+            new_component = ScriptComponent()
 
         elif type_ == 'collider':
             new_component = Collider(self)
@@ -56,43 +55,35 @@ class Sprite:
             self.components.append(new_component)
             return new_component
         else:
-            fail_system.error(f"component {type_} does not exist", 'sprite.Sprite.add_component()')
+            raise Exception(f"component {type_} does not exist")
 
     def get_component(self, type_):
-        new_type = utilities.check_input(type_, str, (f'type cannot be of type {type(type_)}, must be of type str.', 'sprite.get_component(type)'))
-        if new_type is not False:
+        type_ = str(type_)
 
-            if new_type == 'script':
-                scripts = []
-                for component in self.components:
-                    if component.type == new_type:
-                        scripts.append(component)
-                return scripts
-            else:
+        if type_ == 'script':
+            scripts = []
+            for component in self.components:
+                if component.type == type_:
+                    scripts.append(component)
+            return scripts
+        else:
 
-                for component in self.components:
-                    if component.type == new_type:
-                        return component
-                return False
+            for component in self.components:
+                if component.type == type_:
+                    return component
+            return False
 
-    def change_name(self, new_name):
-        new_new_name = utilities.check_input(new_name, str, (f'new_name must be of type str, not {type(new_name)}', 'sprite.change_name(new_name)'))
-        if new_new_name is not False:
-            self.name = new_new_name
+    def change_name(self, name):
+        self.name = str(name)
 
     def remove_component(self, type):
-        new_type = utilities.check_input(type, str, (f'Component type must be of type str, not {type(type)}.', 'sprite.Sprite.remove_component(type) (1)'))
-        if new_type is not False:
-            component = self.get_component(new_type)
-            if component is False:
-                fail_system.error(f'Component {new_type} could not be found. Make sure you have initialised it, and spelt it correctly.', 'sprite.Sprite.remove_component(type) (5)')
-                return False
-            else:
-                # remove_component
-                pass
+
+        component = self.get_component(str(type))
+        if component is False:
+            raise Exception(f'Component {str(type)} could not be found to remove. Make sure you have initialised it, and spelt it correctly.')
+        else:
+            # remove_component
+            pass
 
     def set_tag(self, tag_):
-        new_tag = utilities.check_input(tag_, Tag, (f'Tag must of of type Tag, not of type {type(tag_)}.', 'sprite.Sprite.set_tag(tag_)'))
-        if new_tag is not False:
-
-            self.tag = new_tag
+        self.tag = utilities.check_input(tag_, Tag)

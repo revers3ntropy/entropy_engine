@@ -1,5 +1,4 @@
 import script
-import fail_system
 import standard_button
 import switch_button
 import text_box
@@ -19,7 +18,7 @@ class Element:
     def add_component(self, type):
         new_component = None
         if type == 'script':
-            new_component = script.Script()
+            new_component = script.ScriptComponent()
 
         elif self.primary_component is None:
             if type == 'standard button':
@@ -41,11 +40,10 @@ class Element:
 
             return new_component
         else:
-            fail_system.error("component type '" + str(type) + "' doesn't exist", 'ui.Element.add_component()')
+            raise Exception(f"component type '{type}' doesn't exist")
 
     def get_component(self, type_):
-        new_type = utilities.check_input(type_, str, (f'type cannot be of type {type(type_)}, must be of type str.',
-                                                      'sprite.get_component(type)'))
+        new_type = utilities.check_input(type_, str)
         if new_type is not False:
             if new_type == 'script':
                 scripts = []
@@ -64,17 +62,11 @@ class Element:
         return self.primary_component
 
     def change_name(self, new_name):
-        try:
-            self.name = str(new_name)
-        except:
-            fail_system.error(f'Name cannot be set to {new_name}. Make sure it is of type str.', 'ui.Element.change_name(new_name)')
+        self.name = str(new_name)
 
     def render(self):
         if self.primary_component is not None:
             self.primary_component.render()
 
     def set_state(self, state):
-        if type(state) == bool:
-            self.state = state
-        else:
-            fail_system.error(f'state cannot be of type {type(state)}, must be of type bool.', 'ui.Element.set_state(state)')
+        self.state = utilities.check_input(state, bool)

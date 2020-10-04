@@ -1,16 +1,17 @@
-import typing
+import time
+
 import pygame as py
 import pygame as keys  # so you can access the keys from entropy_engine
+
+import typing
 import global_data
 import curser
 import renderer
-import fail_system
 import unit_tests
-import time
 import time_controller
 import utilities
 import colour
-import scene_controller
+import scene_manager
 
 # ================================================================================================
 # |-------------------------------------={ Joseph Coppin }=-------------------------------------|
@@ -40,11 +41,11 @@ import scene_controller
 
 
 def init(screen_size):
-    new_size = utilities.check_vector2(screen_size, int, 'entropy_engine.init(screen_size)')
-    if new_size is not False:
-        renderer.init_screen(new_size)
+    scene_manager.new_scene('Untitled')
 
-        unit_tests.Tests().run_all_tests()
+    renderer.init_screen(utilities.check_vector2(screen_size, int))
+
+    unit_tests.Tests().run_all_tests()
 
 
 def __tick():
@@ -57,7 +58,7 @@ def __tick():
             end()
 
     # controls the processing of sprites and ui elements
-    current_scene = scene_controller.scene_manager.scenes[scene_controller.scene_manager.active_scene]
+    current_scene = scene_manager.scenes[scene_manager.active_scene]
     current_scene.ui_controller.run_ui()
     current_scene.sprite_controller.update_sprites()
 
@@ -78,7 +79,7 @@ def __tick():
 
 
 def run_game():
-    current_scene = scene_controller.scene_manager.scenes[scene_controller.scene_manager.active_scene]
+    current_scene = scene_manager.scenes[scene_manager.active_scene]
     current_scene.sprite_controller.init_sprites()
     current_scene.ui_controller.init_ui()
 
@@ -119,7 +120,7 @@ def keypress(key):
             return True
         return False
     except IndexError:
-        fail_system.error(str(key) + ' is not a valid key input.', 'entropy_engine.keypress(key)')
+        raise Exception(f'{key} is not a valid key input.')
 
 
 def get_mouse_position():
@@ -131,23 +132,11 @@ def get_mouse_down():
 
 
 def set_window_title(message):
-    new_message = utilities.check_input(message, str, (
-        'Window title must be set to type str, not ' + str(type(message)) +
-        '.', 'entropy_engine.set_window_title(message)'))
-    if new_message is not False:
-        global_data.window_title = new_message
+    global_data.window_title = str(message)
 
 
 def file_to_image(file_name):
-    new_file_name = utilities.check_input(file_name, str, (
-        'File name cannot be ' + str(file_name) + '. Must be of type str.',
-        'entropy_engine.file_to_image(file_name)'))
-    if new_file_name is not False:
-        try:
-            return py.image.load(str(new_file_name))
-        except:
-            fail_system.error("File '" + str(new_file_name) + "' could not be found",
-                              'entropy_engine.file_to_image()')
+    return py.image.load(str(str(file_name)))
 
 
 def get_current_fps():
@@ -159,20 +148,12 @@ def get_target_fps():
 
 
 def set_target_fps(fps):
-    new_fps = utilities.check_input(fps, int, (
-        'target FPS cannot be get to type ' + str(type(fps)) + '. Must be of type int.',
-        'entropy_engine.set_target_fps(fps)'))
-    if new_fps is not False:
-        try:
-            new_fps = int(new_fps)
-            if 0 < new_fps < 10000:
-                renderer.run_FPS = new_fps
-            else:
-                fail_system.error('FPS cannot be set to ' + str(new_fps),
-                                  'entropy_engine.set_target_fps() (6)')
-        except:
-            fail_system.error('FPS cannot be set to ' + str(new_fps),
-                              'entropy_engine.set_target_fps() (8)')
+    new_fps = utilities.check_input(fps, int)
+
+    if 0 < new_fps < 10000:
+        renderer.run_FPS = new_fps
+    else:
+        raise Exception(f'FPS cannot be set to {new_fps}. Make sure it is between 0 and 10000.')
 
 
 def get_current_tick():
@@ -180,30 +161,32 @@ def get_current_tick():
 
 
 def new_colour(_colour):
-    new_colour = utilities.check_vector(_colour, int, 'entropy_engine.new_colour(colour)')
-    if new_colour is not False:
-        if len(new_colour) == 3:
-            good = True
-            for i in range(3):
-                if 0 > new_colour[i] > 255:
-                    good = False
+    new_colour = utilities.check_vector(_colour, int)
 
-            if good:
-                return colour.Colour(new_colour)
+    if len(new_colour) == 3:
+        good = True
+        for i in range(3):
+            if 0 > new_colour[i] > 255:
+                good = False
 
-    fail_system.error(
-        f'Cannot create colour {new_colour}. Make sure there are three elements between 0 and 255.',
-        'entropy_engine.new_colour(_colour)')
-    return False
+        if good:
+            return colour.Colour(new_colour)
 
-
-def scene_manager():
-    return scene_controller.scene_manager
+    raise Exception(f'Cannot create colour {new_colour}. Make sure there are three elements between 0 and 255.')
 
 
 def create_sprite(name):
-    return scene_controller.scene_manager.current_scene().create_sprite(name)
+    return scene_manager.current_scene().create_sprite(name)
 
 
 def create_ui_element(name):
-    return scene_controller.scene_manager.current_scene().create_ui_element(name)
+    return scene_manager.current_scene().create_ui_element(name)
+
+
+class Script:
+    def __init__(self):
+        pass
+
+class Prefab:
+    def __init__(self):
+        pass

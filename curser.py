@@ -8,7 +8,7 @@ import global_data
 #
 #                                  Project Name : RE_pygame_menu
 #
-#                                     File Name : curser.py
+#                                     File Name : cursor.py
 #
 #                                       Created : August 31, 2020
 #

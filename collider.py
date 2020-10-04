@@ -1,8 +1,7 @@
 import sprite_controller
 import hit_box
-import fail_system
 import utilities
-import scene_controller
+import scene_manager
 import pygame as py
 
 
@@ -26,8 +25,8 @@ class Collider(sprite_controller.SpriteComponent):
 
     def check_touching(self):
         touching = []
-        for sprite in scene_controller.scene_manager.scenes[
-            scene_controller.scene_manager.active_scene].sprite_scontroller.list_of_sprites:
+        for sprite in scene_manager.scenes[scene_manager.active_scene].sprite_controller.list_of_sprites:
+
             if sprite.name != self.sprite.name:
                 if sprite.get_component('collider') is not False:
                     if self.hit_box.check_hit_box_collision(
@@ -60,10 +59,10 @@ class Collider(sprite_controller.SpriteComponent):
             self.__collide(sprite)
 
     def set_size(self, size):
-        new_size = utilities.check_vector2(size, int, 'collider.Collider.set_size(size)')
-        if new_size is not False:
-            self.size_x = new_size[0]
-            self.size_y = new_size[1]
+        new_size = utilities.check_vector2(size, int)
+
+        self.size_x = new_size[0]
+        self.size_y = new_size[1]
 
     def update_hit_box(self):
         x = self.body.position[0]
@@ -71,32 +70,16 @@ class Collider(sprite_controller.SpriteComponent):
         self.hit_box = hit_box.HitBox(x, y, self.size_x, self.size_y)
 
     def set_is_trigger(self, value):
-        try:
-            self.is_trigger = bool(value)
-        except:
-            fail_system.error('is_trigger cannot be set to ' + str(
-                value) + '. Please set it to either True or False.', 'collider.set_is_trigger()')
+        self.is_trigger = utilities.check_input(value, bool)
 
     def set_solid(self, value):
-        try:
-            self.solid = bool(value)
-        except:
-            fail_system.error(
-                'solid cannot be set to ' + str(value) + '. Please set it to either True or False.',
-                'collider.set_solid()')
+        self.solid = utilities.check_input(value, bool)
 
     def set_bounce(self, value):
-        try:
-            bounce = float(value)
-            if -100 > bounce > 100:
-                fail_system.error(
-                    'Bounce range is -100 to 100, which does not include ' + str(value),
-                    'collider.set_bounce() (4)')
-            else:
-                self.bounce = bounce
-        except:
-            fail_system.error('Bounce range is -1 to 1, which does not include ' + str(value),
-                              'collider.set_bounce() (6)')
+        bounce = utilities.check_input(value, float)
+        if -100 > bounce > 100:
+            raise Exception(f'Bounce range is -100 to 100, which does not include {value}')
+        self.bounce = bounce
 
     def get_moused(self):
         if self.hit_box.check_point_collision(py.mouse.get_pos()):

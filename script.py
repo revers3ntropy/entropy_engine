@@ -1,8 +1,7 @@
 import ui_controller
-import fail_system
 
 
-class Script(ui_controller.UIComponent):
+class ScriptComponent(ui_controller.UIComponent):
     def __init__(self):
         super().__init__('script')
         self.script = None
@@ -12,7 +11,10 @@ class Script(ui_controller.UIComponent):
 
     def set_script(self, script_class):
         if type(script_class) in (float, int, str, bool, list, dict, tuple):
-            fail_system.error(f'Script must be a class object, not type {type(script_class)}.', 'script.Script.set_script(script_class)')
+            raise Exception(f'Script must be a class object, not type {type(script_class)}.', 'script.Script.set_script(script_class)')
+
+        if script_class.__class__.__bases__[0].__name__ != 'Script':
+            raise Exception(f'Script must inherit from type Script', 'script.Script.set_script(script_class)')
 
         self.script = script_class
         try:

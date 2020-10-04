@@ -49,9 +49,9 @@ class TextButton(button.Buttons):
     # ================================================================================================
     def display_box(self):
         if self.moused:
-            py.draw.rect(renderer.screen, self.selected_colour, self.hit_box.get_hit_box())
+            py.draw.rect(renderer.screen, self.selected_colour, self.hit_box.hit_box)
         else:
-            py.draw.rect(renderer.screen, self.outside_colour, self.hit_box.get_hit_box())
+            py.draw.rect(renderer.screen, self.outside_colour, self.hit_box.hit_box)
         new_hit_box = (self.hit_box.x + 2, self.hit_box.y + 2, self.hit_box.size_x - 4, self.hit_box.size_y - 4)
         py.draw.rect(renderer.screen, self.inside_colour, new_hit_box)
 

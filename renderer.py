@@ -1,15 +1,10 @@
-import pygame as py
-import sprite_controller
-import fail_system
-import ui_controller
-import global_data
 # ================================================================================================
 # |                                       Joseph Coppin                                         |
 # ================================================================================================
 #
 #                                  Project Name : Computer Science GSCE Coursework
 #
-#                                     File Name : file_name.py
+#                                     File Name : renderer.py
 #
 #                                       Created : July 25, 2020
 #
@@ -22,7 +17,9 @@ import global_data
 # ------------------------------------------------------------------------------------------------
 #
 # Imports:
-# 	pygame
+import pygame as py
+import global_data
+import scene_manager
 #
 # ------------------------------------------------------------------------------------------------
 #
@@ -94,7 +91,7 @@ def set_current_background(new_background_id):
     global background_images
     global current_background
     if int(new_background_id) < 0 or int(new_background_id) > len(background_images):
-        fail_system.error('Background cannot be set to ' + str(new_background_id), 'renderer.set_current_background()')
+        raise Exception(f'Background cannot be set to {new_background_id}')
 
 
 def render_background():
@@ -133,14 +130,14 @@ def __render_sprite(sprite, camera_coords):
 
 
 def render_sprites():
-    camera = sprite_controller.list_of_sprites[0]
+    camera = scene_manager.scenes[scene_manager.active_scene].sprite_controller.list_of_sprites[0]
     camera_coords = camera.get_component('body').position
 
-    for i in sprite_controller.list_of_sprites:
+    for i in scene_manager.scenes[scene_manager.active_scene].sprite_controller.list_of_sprites:
         __render_sprite(i, camera_coords)
 
 
 def render_ui():
-    for i in ui_controller.list_of_ui:
+    for i in scene_manager.scenes[scene_manager.active_scene].ui_controller.list_of_ui:
         if i.state:
             i.render()
