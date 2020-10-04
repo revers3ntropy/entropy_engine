@@ -106,7 +106,7 @@ player = ee.create_sprite('player')
 player_collider = player.add_component('collider')
 player_body = player.add_component('body')
 # this is how the player will look on the screen - a rectangle
-player_renderer = player.add_component('rect_renderer')
+player_renderer = player.add_component('rect renderer')
 player_renderer.set_colour((0, 200, 255))
 # this adds the PlayerController script to the player
 player.add_component('script').set_script(PlayerController(player_body, player_collider))

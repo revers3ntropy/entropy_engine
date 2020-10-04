@@ -1,35 +1,36 @@
-list_of_ui = []
+class UIController:
+    def __init__(self, test):
+        print('initiated ui controller')
+        self.list_of_ui = []
+        print(test)
 
+    def get_element(self, name):
+        for i in self.list_of_ui:
+            if i.name == str(name):
+                return i
+        return False
 
-def get_element(name):
-    for i in list_of_ui:
-        if i.name == str(name):
-            return i
-    return False
+    def init_ui(self):
+        for sprite in self.list_of_ui:
+            for component in sprite.components:
+                component.start()
 
+    def run_ui(self):
+        for i in self.list_of_ui:
+            if i.state:
 
-def init_ui():
-    for sprite in list_of_ui:
-        for component in sprite.components:
-            component.start()
+                for component in i.components:
+                    if component.type == 'script':
+                        try:
+                            component.script.update()
+                        except:
+                            pass
 
-
-def run_ui():
-    for i in list_of_ui:
-        if i.state:
-
-            for component in i.components:
-                if component.type == 'script':
+                if i.get_primary_component().run():
                     try:
-                        component.script.update()
+                        i.get_component('script').script.on_click()
                     except:
                         pass
-
-            if i.get_primary_component().run():
-                try:
-                    i.get_component('script').script.on_click()
-                except:
-                    pass
 
 
 class UIComponent:
