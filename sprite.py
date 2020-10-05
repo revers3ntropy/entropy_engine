@@ -2,6 +2,7 @@ from body import Body
 from image import Image
 from script import ScriptComponent
 from collider import Collider
+from composite_collider import CompositeCollider
 from tag import Tag
 from animation import Animation
 from rect_renderer import RectRenderer
@@ -47,6 +48,9 @@ class Sprite:
 
         elif type_ == 'collider':
             new_component = Collider(self)
+
+        elif type_ == 'composite collider':
+            new_component = CompositeCollider(self)
 
         elif type_ == 'animation':
             new_component = Animation(self)

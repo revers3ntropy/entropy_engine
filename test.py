@@ -32,7 +32,6 @@ class PlayerController(ee.Script):
 
     # automatically called every tick
     def update(self):
-        ee.get_center()
         # player movement
         if ee.keypress(ee.py.K_LEFT) or ee.keypress(ee.py.K_a):
             self.__body.move([-2, 0])
@@ -85,6 +84,7 @@ class Obstacle(ee.Prefab):
         self.image = self.sprite.add_component('image')
         self.image.set_image_from_file('graphics/obstacle.png')
         self.body.set_gravity(0)
+        self.body.set_friction(100)
 
 
 # this is a list of the locations for our obstacle
@@ -110,7 +110,7 @@ player_collider = player.add_component('collider')
 player_body = player.add_component('body')
 # this is how the player will look on the screen - a rectangle
 player_renderer = player.add_component('rect renderer')
-player_renderer.set_colour(ee.new_colour((0, 200, 255)))
+player_renderer.set_colour(ee.new_colour((0, 0, 0)))
 # this adds the PlayerController script to the player
 player.add_component('script').set_script(PlayerController(player_body, player_collider))
 

@@ -70,10 +70,6 @@ class Body(sprite_controller.SpriteComponent):
         # leave, stupid collisions
         previous_pos = self.position
 
-        print(f'change: {new_position_change}')
-        print(f'position: {self.position}')
-        print(f'new: {utilities.add_vectors(new_position_change, self.position)}')
-
         self.position = utilities.add_vectors(new_position_change, self.position)
 
         if self.check_collision():
