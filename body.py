@@ -9,6 +9,7 @@ class Body(sprite_controller.SpriteComponent):
         super().__init__('body')
         self.sprite = sprite
         self.collider = None
+        self.composite_collider = None
 
         self.position = (0, 0)
         self.velocity = (0, 0)
@@ -18,6 +19,9 @@ class Body(sprite_controller.SpriteComponent):
 
     def start(self):
         self.collider = self.sprite.get_component('collider')
+
+        if not self.collider:
+            self.composite_collider = self.sprite.get_component('composite collider')
 
     # -------------------------------------------={ Velocity }=---------------------------------------------------------
 
@@ -107,9 +111,15 @@ class Body(sprite_controller.SpriteComponent):
         if self.collider is not False and self.collider is not None:
             self.collider.update_collision()
 
+        if self.composite_collider is not False and self.composite_collider is not None:
+            self.composite_collider.update_colliders()
+
         self.position = utilities.add_vectors(self.position, self.velocity)
         if self.collider is not False and self.collider is not None:
             self.collider.update_hit_box()
+
+        if self.composite_collider is not False and self.composite_collider is not None:
+            self.composite_collider.update_hit_boxes()
 
     def apply_gravity(self):
         self.apply_force((0, self.gravity))

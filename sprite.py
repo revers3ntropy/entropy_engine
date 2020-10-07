@@ -47,10 +47,12 @@ class Sprite:
             new_component = ScriptComponent()
 
         elif type_ == 'collider':
-            new_component = Collider(self)
+            if not self.get_component('collider') and not self.get_component('composite collider'):
+                new_component = Collider(self)
 
         elif type_ == 'composite collider':
-            new_component = CompositeCollider(self)
+            if not self.get_component('collider') and not self.get_component('composite collider'):
+                new_component = CompositeCollider(self)
 
         elif type_ == 'animation':
             new_component = Animation(self)

@@ -37,10 +37,27 @@ def new_scene(name):
     scenes.append(Scene(str(name)))
 
 
-def set_active_scene(scene_id):
+def set_active_scene(scene):
     global active_scene
+    global scenes
 
-    active_scene = scene_id
+    if type(scene) == int:
+        active_scene = scene
+    else:
+        for i in range(len(scenes)):
+            if scenes[i].name == str(scene):
+                active_scene = i
+
+
+def get_scene(scene):
+    global scenes
+
+    if type(scene) == int:
+        return scenes[scene]
+    else:
+        for i in range(len(scenes)):
+            if scenes[i].name == str(scene):
+                return scenes[i]
 
 
 def current_scene():
@@ -99,3 +116,9 @@ class Scene:
                 sprites.append(search)
 
         return sprites
+
+    def get_sprites(self):
+        return self.sprite_controller.list_of_sprites
+
+    def get_ui_elements(self):
+        return self.ui_controller.list_of_ui

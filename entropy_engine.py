@@ -12,6 +12,7 @@ import time_controller
 import utilities
 import colour
 import scene_manager
+import game_data_manager
 
 # ================================================================================================
 # |-------------------------------------={ Joseph Coppin }=-------------------------------------|

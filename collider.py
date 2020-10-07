@@ -26,8 +26,8 @@ class Collider(sprite_controller.SpriteComponent):
     def check_touching(self):
         touching = []
         for sprite in scene_manager.scenes[scene_manager.active_scene].sprite_controller.list_of_sprites:
+            if sprite.name != self.sprite.name:  # makes sure you can't collide with yourself.
 
-            if sprite.name != self.sprite.name:
                 if sprite.get_component('collider') is not False:
                     if self.hit_box.check_hit_box_collision(
                             sprite.get_component('collider').hit_box):
@@ -49,10 +49,19 @@ class Collider(sprite_controller.SpriteComponent):
                 except:
                     pass
 
-        if self.solid and collision_sprite.get_component('collider').solid:
+        def bounce():
             self.__move_back()
-            self.body.set_velocity(
-                (self.body.velocity[0] * -self.bounce, self.body.velocity[1] * -self.bounce))
+            self.body.set_velocity((self.body.velocity[0] * -self.bounce,
+                                    self.body.velocity[1] * -self.bounce))
+        if self.solid:
+            if collision_sprite.get_component('collider').solid:
+                bounce()
+
+            composite_collider = collision_sprite.get_component('composite collider')
+            if composite_collider:
+                for collider_ in composite_collider.colliders:
+                    if collider_.solid:
+                        bounce()
 
     def update_collision(self):
         for sprite in self.check_touching():

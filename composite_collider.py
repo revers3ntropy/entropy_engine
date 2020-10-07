@@ -20,11 +20,6 @@ import sprite_controller
 #
 # ------------------------------------------------------------------------------------------------
 #
-# global_function_1 - what this function does
-#
-# class 'preset' - what this class does
-#   function_1 - what this function does
-#
 # ================================================================================================
 
 
@@ -36,3 +31,11 @@ class CompositeCollider(sprite_controller.SpriteComponent):
 
     def add_rect_collider(self):
         self.colliders.append(collider.Collider(self.sprite))
+
+    def update_colliders(self):
+        for collider_ in self.colliders:
+            collider_.update_collision()
+
+    def update_hit_boxes(self):
+        for collider_ in self.colliders:
+            collider_.update_hit_box()
