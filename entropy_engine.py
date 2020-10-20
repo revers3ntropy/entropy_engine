@@ -3,16 +3,15 @@ import time
 import pygame as py
 import pygame as keys  # so you can access the keys from entropy_engine
 
-import typing
 import global_data
 import curser
 import renderer
 import unit_tests
 import time_controller
 import utilities
-import colour
 import scene_manager
-import game_data_manager
+import script_class
+import game_data_manager  # again, for access through ee
 
 # ================================================================================================
 # |-------------------------------------={ Joseph Coppin }=-------------------------------------|
@@ -91,89 +90,12 @@ def run_game():
     quit()
 
 
-def end():
-    global_data.go = False
-
-
-def get_screen_size():
-    return renderer.mid[0] * 2, renderer.mid[1] * 2
-
-
-def force_screen_update():
-    py.display.update()
-
-
 def get_center():
     return renderer.mid
 
 
-def chaos():
-    return typing.chaos_14x16
-
-
-def retro():
-    return typing.retro_8x10
-
-
-def keypress(key):
-    try:
-        if py.key.get_pressed()[key]:
-            return True
-        return False
-    except IndexError:
-        raise Exception(f'{key} is not a valid key input.')
-
-
-def get_mouse_position():
-    return py.mouse.get_pos()
-
-
-def get_mouse_down():
-    return py.mouse.get_pressed()
-
-
-def set_window_title(message):
-    global_data.window_title = str(message)
-
-
-def file_to_image(file_name):
-    return py.image.load(str(str(file_name)))
-
-
-def get_current_fps():
-    return time_controller.current_fps
-
-
-def get_target_fps():
-    return renderer.run_FPS
-
-
-def set_target_fps(fps):
-    new_fps = utilities.check_input(fps, int)
-
-    if 0 < new_fps < 10000:
-        renderer.run_FPS = new_fps
-    else:
-        raise Exception(f'FPS cannot be set to {new_fps}. Make sure it is between 0 and 10000.')
-
-
-def get_current_tick():
-    return time_controller.tick
-
-
-def new_colour(_colour):
-    new_colour = utilities.check_vector(_colour, int)
-
-    if len(new_colour) == 3:
-        good = True
-        for i in range(3):
-            if 0 > new_colour[i] > 255:
-                good = False
-
-        if good:
-            return colour.Colour(new_colour)
-
-    raise Exception(f'Cannot create colour {new_colour}. Make sure there are three elements between 0 and 255.')
+def end():
+    global_data.go = False
 
 
 def create_sprite(name):
@@ -184,9 +106,10 @@ def create_ui_element(name):
     return scene_manager.current_scene().create_ui_element(name)
 
 
-class Script:
+class Script(script_class.Script):
     def __init__(self):
-        pass
+        super().__init__()
+
 
 class Prefab:
     def __init__(self):

@@ -36,6 +36,9 @@ class Body(sprite_controller.SpriteComponent):
     def set_speed(self, speed):
         new_speed = utilities.check_input(speed, float)
 
+        if self.velocity[1] == 0:
+            self.velocity = (self.velocity[0], 0.0001)
+
         direction = math.atan(self.velocity[0] / self.velocity[1]) % 360
         magnitude = new_speed
 
@@ -47,13 +50,11 @@ class Body(sprite_controller.SpriteComponent):
     def push(self, amount):
         self.set_speed(self.get_speed() + utilities.check_input(amount, float))
 
-    def set_direction(self, angle):
-        new_angle = utilities.check_input(angle, float)
+    def set_direction(self, theta):
 
-        direction = new_angle % 360
         magnitude = math.sqrt(self.velocity[0] ** 2 + self.velocity[1] ** 2)
 
-        self.velocity = utilities.angle_magnitude_to_vector(magnitude, direction)
+        self.velocity = utilities.angle_magnitude_to_vector(magnitude, (utilities.check_input(theta, float) % 360) - 90)
 
     def rotate(self, angle):
         self.set_direction(self.get_direction() + utilities.check_input(angle, float))

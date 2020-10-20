@@ -20,6 +20,7 @@
 import pygame as py
 import global_data
 import scene_manager
+import time_controller
 #
 # ------------------------------------------------------------------------------------------------
 #
@@ -27,13 +28,9 @@ import scene_manager
 
 mid = (0, 0)
 
-run_FPS = 60
-
 background_colour = (255, 255, 255)
 
 py.init()
-
-clock = py.time.Clock()
 
 screen_size = width, height = 600, 400
 
@@ -56,12 +53,11 @@ def tick_window():
     screen.fill(background_colour)
 
     py.display.set_caption(str(global_data.window_title))
-    clock.tick(run_FPS)
+    time_controller.clock_tick()
 
 
 def set_target_fps(new_fps):
-    global run_FPS
-    run_FPS = new_fps
+    time_controller.run_fps = new_fps
 
 
 def set_background_colour(new_colour):

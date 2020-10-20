@@ -2,8 +2,8 @@ import entropy_engine as ee
 from entropy_engine import scene_manager
 # initialising entropy engine
 ee.init((1000, 800))
-ee.set_window_title('Example Game')
-ee.set_target_fps(60)
+ee.Script.set_window_title('Example Game')
+ee.Script.set_target_fps(60)
 
 
 # the script to control the player (this might be in another file in your game, but I have everything in one file for simplicity)
@@ -33,13 +33,13 @@ class PlayerController(ee.Script):
     # automatically called every tick
     def update(self):
         # player movement
-        if ee.keypress(ee.py.K_LEFT) or ee.keypress(ee.py.K_a):
+        if self.keypress(ee.py.K_LEFT) or self.keypress(ee.py.K_a):
             self.__body.move([-2, 0])
 
-        if ee.keypress(ee.py.K_RIGHT) or ee.keypress(ee.py.K_d):
+        if self.keypress(ee.py.K_RIGHT) or self.keypress(ee.py.K_d):
             self.__body.move([2, 0])
 
-        if ee.keypress(ee.py.K_UP) or ee.keypress(ee.py.K_SPACE):
+        if self.keypress(ee.py.K_UP) or self.keypress(ee.py.K_SPACE):
             # so you can only jump when touching the ground
             if self.__colliding_with is not None:
                 self.__body.jump(20)
@@ -110,7 +110,7 @@ player_collider = player.add_component('collider')
 player_body = player.add_component('body')
 # this is how the player will look on the screen - a rectangle
 player_renderer = player.add_component('rect renderer')
-player_renderer.set_colour(ee.new_colour((0, 0, 0)))
+player_renderer.set_colour(ee.Script.new_colour((0, 0, 0)))
 # this adds the PlayerController script to the player
 player.add_component('script').set_script(PlayerController(player_body, player_collider))
 
@@ -135,7 +135,7 @@ death_counter_text = death_counter.add_component('text')
 # quickly adds the DeathCounterController script to the death counter element
 death_counter.add_component('script').set_script(DeathCounterController(player.get_component('script')[0].script, death_counter_text))
 # puts it in the corner on the screen
-death_counter_text.set_position((ee.get_screen_size()[0] - 200, 50))
+death_counter_text.set_position((ee.Script.get_screen_size()[0] - 200, 50))
 
 # adds the camera script to the camera game object, which has already been initialised
 camera_controller = scene_manager.current_scene().find_sprite('camera').add_component('script')
